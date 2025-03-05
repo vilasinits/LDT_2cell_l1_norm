@@ -28,7 +28,7 @@ class VariablesGenerator:
             Calculates additional derived quantities based on the cosmological parameters and stores them as attributes.
     """
 
-    def __init__(self, h, H0, Ob, Oc, mnu, ns, As, zs, theta1, **kwargs):
+    def __init__(self, h, H0, Ob, Oc, mnu, ns, As, zs,w,w0, theta1, **kwargs):
         """
         Initializes the VariablesGenerator with given parameters, converts angular scales, and computes initial derived variables.
 
@@ -52,6 +52,8 @@ class VariablesGenerator:
         self.ns = ns
         self.As = As
         self.zs = zs 
+        self.w = w
+        self.w0 = w0
         self.theta1_radian = (theta1 * u.arcmin).to(u.radian).value  # Convert theta1 from arcmin to radians
         self.theta2_radian = 2. * self.theta1_radian  # Double the angular scale for theta2
         self.variables = self.get_derived_variables()  # Compute initial set of derived variables
@@ -74,7 +76,7 @@ class VariablesGenerator:
         kmax = kwargs.get('kmax', 1000.)
         nplanes = kwargs.get('nplanes', 21)
         # Initialize cosmology with given parameters
-        self.cosmo = Cosmology_function(self.h, self.H0, self.Ob, self.Oc, self.mnu, self.ns, self.As, self.zs)
+        self.cosmo = Cosmology_function(self.h, self.H0, self.Ob, self.Oc, self.mnu, self.ns, self.As, self.zs, self.w,self.w0)
         # Compute comoving distance to source redshift
         self.chi_source = self.cosmo.get_chi(self.zs)
         # Setup lensing planes
