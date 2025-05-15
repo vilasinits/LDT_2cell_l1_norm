@@ -1,7 +1,4 @@
-import numpy as np
-import healpy as hp
-import multiprocessing as mp
-import sys
+from imports import *
 
 class TakahashiLoader:
     def __init__(self, data_path="/feynman/work/dap/lcs/vt272285/data/sim_data", takahashi_data_path=None):

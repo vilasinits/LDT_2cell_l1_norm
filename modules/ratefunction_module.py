@@ -1,7 +1,4 @@
-import numpy as np
-from numpy import newaxis
-import scipy
-from scipy.optimize import root
+from imports import *
 
 def get_tau(rho):
     nu = 1.4
@@ -26,7 +23,7 @@ def get_psi_2cell(variance, chi, recal, z, delta1, delta2, theta1, theta2):
     det = (sig2lr11 * sig2lr22) - (sig2lr12 * sig2lr12)
     psi = (sig2lr11*tau2sq - 2.0*sig2lr12*tau12sq + sig2lr22*tau1sq) * recal / (det*2.0)
     return psi
-
+ 
 def get_phi_projec_2cell(theta1, theta2, zarr, chis, dchis, w, y, recal, variance,**kwargs):
     deld = kwargs.get('deld',1e-6)
     nchi = len(chis)

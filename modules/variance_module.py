@@ -1,7 +1,5 @@
-# from cosmology_module import Cosmology_function
-import numpy as np
-import scipy.special
-from scipy.integrate import simps
+from imports import *
+from functools import lru_cache
 
 class Variance:
     """
@@ -13,24 +11,25 @@ class Variance:
         PK_interpolator_nonlinear (Interpolator): An interpolator instance for nonlinear power spectrum calculations.
         model (str): The name of the cosmological model to be used for variance calculations.
         
-        Formulae: 
-        \sigma^2\!(R_1,R_2;\!z) \!=\!\!\!\!\int \!\!\frac{{\rm d}^2\bm{k}_{{\perp}}}{(2\pi)^2}  \!P(k_{{\perp}};z)  W_{TH}(R_1 k_{\perp}\!)  W_{TH}(\!R_2 k_{\perp}\!)
-        where $W_{TH}(l) = 2J_1(l)/l$ and $J_1$ is the first Bessel function of the first kind;
     """
-    def __init__(self, cosmo, PK_interpolator_linear, PK_interpolator_nonlinear, model):
+    def __init__(self, cosmo, z_values, z_values_critical,filter_type, variability=True, delta_A0=0.05): # pk_nonlin is now calculated internally
         """
-        Initializes the Variance class with cosmology, power spectrum interpolators, and the model name.
+        Initializes the Variance class with cosmology and parameters for P(k) calculation.
+        Calculates the non-linear power spectrum, including cosmic variance noise if volume is specified.
         
         Parameters:
-            cosmo (Cosmology): An instance of a cosmology class.
-            PK_interpolator_linear (Interpolator): An interpolator for linear power spectrum.
-            PK_interpolator_nonlinear (Interpolator): An interpolator for nonlinear power spectrum.
-            model (str): The cosmological model name.
+            cosmo (Cosmology_function): An instance of the cosmology class.
+            z_values (array-like): Redshifts for lensing planes/primary calculations.
+            volume (float, optional): Volume for cosmic variance calculation in (Mpc/h)^3. Defaults to None (no CV noise).
+            delta_A0 (float, optional): Parameter for additional non-Gaussian noise. Defaults to 1.9.
         """
         self.cosmo = cosmo
-        self.PK_interpolator_linear = PK_interpolator_linear
-        self.PK_interpolator_nonlinear = PK_interpolator_nonlinear
-        self.model=model
+        self.filter_type = filter_type
+        # Calculate the non-linear power spectrum internally
+        z_values_all = np.append(z_values, z_values_critical)
+        # self.pk_nonlin = compute_pk_with_cv(cosmo, volume, z_values_all, delta_A0)
+        self.pk_nonlin = compute_pk_with_cv( cosmo, cosmo.z_nz, z_values_all, cosmo.n_norm, delta_A0=delta_A0, variability=variability)
+        print("Variance module initialized.")
 
     def top_hat_window(self, R):
         """
@@ -43,6 +42,142 @@ class Variance:
             numpy.ndarray: The top-hat window function values at the given scale(s).
         """
         return 2. * scipy.special.j1(R) / R
+
+    # def S(self, n: int, b: float) -> float:
+    #     """
+    #     Computes the integral \( \int_0^b dx \ x^{n-1} J_n(x) \) from Appendix of 
+    #     https://ui.adsabs.harvard.edu/abs/2012A%26A...542A.122A/abstract.
+    #     This is a helper function for the analytical Hankel transform of the U-filter.
+
+    #     Args:
+    #         n (int): Order of the Bessel function.
+    #         b (float): Upper limit of the integral.
+
+    #     Raises:
+    #         ValueError: If `n` is not an integer.
+    #         ValueError: If `n` is smaller than -1, for which the integral does not converge.
+
+    #     Returns:
+    #         float: Computed value of the integral.
+    #     """
+    #     if not isinstance(n, int):
+    #         raise ValueError("n must be an integer.")
+    #     if n < -1:
+    #         raise ValueError("n cannot be smaller than -1.")
+        
+    #     b = np.asarray(b)  # Ensure b is a numpy array
+        
+    #     J0 =  sp.j0(b)
+    #     J1 = sp.j1(b)
+        
+    #     if n == 0:
+    #         return b * J1
+    #     elif n == -1:
+    #         return b * np.vectorize(lambda x: float(mp.hyp1f2(0.5, 1, 1.5, -x**2 / 4)))(b)
+    #     else:
+    #         return b**(n+1) * J1 + n * b**n * J0 - n**2 * self.S(n-2, b)
+    
+    # def uHat_starlet_analytical(self, eta):
+    #     """
+    #     Computes the analytical Hankel transform of the starlet U-filter.
+
+    #     Warning:
+    #         This implementation is not numerically stable for small `eta` (<=1e-2). 
+    #         To avoid instability, values below 2e-2 are replaced with  value for `eta=2e-2`.
+
+    #     Args:
+    #         eta (np.ndarray or float): Dimensionless argument \( \hat{u} \), corresponds to \( \theta \ell \).
+
+    #     Returns:
+    #         float: Computed value of \( \hat{u} \).
+    #     """
+    #     eta = np.asarray(eta)  # Ensure eta is a numpy array
+    #     eta_safe = np.clip(eta, 2e-2, 100)  # Avoid instability for small eta
+
+    #     factor1 = self.S(0, 0.5 * eta_safe) * 0.125 * eta_safe**3 - self.S(1, 0.5 * eta_safe) * 0.75 * eta_safe**2
+    #     factor1 += self.S(2, 0.5 * eta_safe) * 1.5 * eta_safe - self.S(3, 0.5 * eta_safe)
+        
+    #     factor2 = self.S(0, eta_safe) * eta_safe**3 - self.S(1, eta_safe) * 3 * eta_safe**2
+    #     factor2 += self.S(2, eta_safe) * 3 * eta_safe - self.S(3, eta_safe)
+        
+    #     factor3 = self.S(0, 2 * eta_safe) * 8 * eta_safe**3 - self.S(1, 2 * eta_safe) * 12 * eta_safe**2
+    #     factor3 += self.S(2, 2 * eta_safe) * 6 * eta_safe - self.S(3, 2 * eta_safe) 
+        
+
+    #     result = (2 * np.pi) * (-128 / 9 * factor1 + 4 * factor2 - 1 / 9 * factor3)/eta_safe**5
+        
+    #     return result
+    
+    @staticmethod
+    @lru_cache(maxsize=None)
+    def S_scalar(n: int, b: float) -> float:
+        if n < -1:
+            raise ValueError("n cannot be smaller than -1.")
+
+        J0 = sp.j0(b)
+        J1 = sp.j1(b)
+
+        if n == 0:
+            return b * J1
+        elif n == -1:
+            return b * float(mp.hyp1f2(0.5, 1, 1.5, -b**2 / 4))
+        else:
+            return b**(n+1) * J1 + n * b**n * J0 - n**2 * Variance.S_scalar(n-2, b)
+
+    def S(self, n: int, b):
+        b = np.asarray(b)
+        if b.ndim == 0:
+            return self.S_scalar(n, float(b))
+        else:
+            return np.vectorize(lambda x: self.S_scalar(n, float(x)))(b)
+    
+    def uHat_starlet_analytical(self, eta):
+        """
+        Computes the analytical Hankel transform of the starlet U-filter.
+        """
+        eta = np.asarray(eta)
+        eta_safe = np.clip(eta, 2e-2, 100)  # Avoid instability for small eta
+
+        # Precompute all needed S-values efficiently
+        b_half = 0.5 * eta_safe
+        b_one = eta_safe
+        b_two = 2.0 * eta_safe
+
+        S0_half = self.S(0, b_half)
+        S1_half = self.S(1, b_half)
+        S2_half = self.S(2, b_half)
+        S3_half = self.S(3, b_half)
+
+        S0_one = self.S(0, b_one)
+        S1_one = self.S(1, b_one)
+        S2_one = self.S(2, b_one)
+        S3_one = self.S(3, b_one)
+
+        S0_two = self.S(0, b_two)
+        S1_two = self.S(1, b_two)
+        S2_two = self.S(2, b_two)
+        S3_two = self.S(3, b_two)
+
+        # Compute factors
+        factor1 = (0.125 * eta_safe**3 * S0_half 
+                   - 0.75 * eta_safe**2 * S1_half 
+                   + 1.5 * eta_safe * S2_half 
+                   - S3_half)
+
+        factor2 = (eta_safe**3 * S0_one 
+                   - 3 * eta_safe**2 * S1_one 
+                   + 3 * eta_safe * S2_one 
+                   - S3_one)
+
+        factor3 = (8 * eta_safe**3 * S0_two 
+                   - 12 * eta_safe**2 * S1_two 
+                   + 6 * eta_safe * S2_two 
+                   - S3_two)
+
+        # Final result
+        result = (2 * np.pi) * (-128/9 * factor1 + 4 * factor2 - 1/9 * factor3) / eta_safe**5
+
+        return result
 
     def linear_sigma2(self, redshift, R1, R2=None):
         """
@@ -58,23 +193,19 @@ class Variance:
         """
         if R2 is None:
             R2 = R1
-        
-        if self.model=='Takahashi' or 'takahashi':
-            lres = 4096 * 1.6
-            l = self.cosmo.k_values * self.cosmo.get_chi(redshift)
-            pk_factor = 1. / (1. + (l / lres) ** 2.)
-            c1, c2 = 9.5171e-4, 5.1543e-3
-            a1, a2, a3 = 1.3063, 1.1475, 0.62793
-            p = ((1. + c1 * (self.cosmo.k_values**-a1))**a1) / ((1. + c2 * (self.cosmo.k_values**-a2))**a3)
         else:
-            pk_factor = 1.
-            p = 1.
+            R2 = R2
 
-        pk = self.PK_interpolator_linear.P(redshift, self.cosmo.k_values) * pk_factor * p
-
-        w1_2D = self.top_hat_window(self.cosmo.k_values * R1)
-        w2_2D = self.top_hat_window(self.cosmo.k_values * R2)
-        w2 = w1_2D * w2_2D
+        # pk = self.PK_interpolator_linear.P(redshift, self.cosmo.k_values)
+        pk = ccl.linear_matter_power(self.cosmo.cosmoccl, self.cosmo.k_values, 1/(1+redshift)) * self.cosmo.h**3
+        if self.filter_type == 'tophat':
+            w1_2D = self.top_hat_window(self.cosmo.k_values * R1)
+            w2_2D = self.top_hat_window(self.cosmo.k_values * R2)
+            w2 = w1_2D * w2_2D
+        elif self.filter_type == 'starlet':
+            w1_2D = self.uHat_starlet_analytical(self.cosmo.k_values * R1)
+            w2_2D = w1_2D #self.uHat_starlet_analytical(self.cosmo.k_values * R2)
+            w2 = -w1_2D * w2_2D
         constant = 1. / 2. / np.pi
         integrand = self.cosmo.k_values * pk * w2 * constant
         return simps(integrand, x=self.cosmo.k_values)
@@ -95,25 +226,20 @@ class Variance:
             R2 = R1
         else:
             R2 = R2
-        
-        if self.model == 'Takahashi' or 'takahashi':
-            lres = 4096 * 1.6
-            l = self.cosmo.k_values * self.cosmo.get_chi(redshift)
-            c1, c2 = 9.5171e-4, 5.1543e-3
-            a1, a2, a3 = 1.3063, 1.1475, 0.62793
-            p = ((1 + c1 * (self.cosmo.k_values**-a1))**a1) / ((1. + c2 * (self.cosmo.k_values**-a2))**a3)
-            pk_factor = 1. / (1. + (l / lres) ** 2.)
-        else:
-            pk_factor = 1.
-            p = 1.
-            
-        pk = self.PK_interpolator_nonlinear.P(redshift, self.cosmo.k_values) * pk_factor * p
-        w1_2D = self.top_hat_window(self.cosmo.k_values * R1)
-        w2_2D = self.top_hat_window(self.cosmo.k_values * R2)
-        w2 = w1_2D * w2_2D
+      
+        pk = self.pk_nonlin[redshift]
+        k = self.cosmo.k_values * self.cosmo.h
+        if self.filter_type == 'tophat':
+            w1_2D = self.top_hat_window(k * R1)
+            w2_2D = self.top_hat_window(k * R2)
+            w2 =  w1_2D * w2_2D
+        elif self.filter_type == 'starlet':
+            w1_2D =  self.uHat_starlet_analytical(k * R1)
+            w2_2D = w1_2D #self.uHat_starlet_analytical(k * R2)
+            w2 =  w1_2D * w2_2D
         constant = 1. / 2. / np.pi
-        integrand = self.cosmo.k_values * pk * w2 * constant
-        return simps(integrand, x=self.cosmo.k_values)
+        integrand = k * pk * w2 * constant
+        return simps(integrand, x=k)
 
     def get_sig_slice(self, z, R1, R2):
         """
@@ -127,10 +253,18 @@ class Variance:
         Returns:
             float: The slice variance σ² at the given scales and redshift.
         """
-        chi = self.cosmo.get_chi(z)
-        sigslice = (
-            self.nonlinear_sigma2(z, R1)
-            + self.nonlinear_sigma2(z, R2)
-            - 2.0 * self.nonlinear_sigma2(z, R1, R2)
-        )
-        return sigslice
+        # chi = self.cosmo.get_chi(z)
+        if self.filter_type == 'tophat':
+            sigslice = (
+                self.nonlinear_sigma2(z, R1)
+                + self.nonlinear_sigma2(z, R2)
+                - 2.0 * self.nonlinear_sigma2(z, R1, R2)
+            )
+            return sigslice
+        elif self.filter_type == 'starlet':
+            sigslice = (
+                self.nonlinear_sigma2(z, R1)
+                # + self.nonlinear_sigma2(z, R2)
+                # - 2.0 * self.nonlinear_sigma2(z, R1, R2)
+            )
+            return sigslice

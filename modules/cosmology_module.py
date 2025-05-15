@@ -1,6 +1,4 @@
-import numpy as np
-import camb
-from scipy.integrate import quad, trapezoid
+from imports import *
 
 class Cosmology_function:
     """
@@ -13,8 +11,8 @@ class Cosmology_function:
         Ol = Omega lambda 
 
     """
-    def __init__(self, h, H0, Ob, Oc, mnu, ns, As_, zs,w,wa,**kwargs):
-        self.h = h  # Assuming H0 is in km/s/Mpc
+    def __init__(self, h, H0, Ob, Oc, mnu, ns, zs, w, wa,kmin,kmax,nz_file, **kwargs):
+        self.h = h  # H0 is in km/s/Mpc
         self.Ob = Ob
         self.Oc = Oc
         self.mnu = mnu
@@ -22,8 +20,15 @@ class Cosmology_function:
         self.Om = Ob + Oc + (mnu / 93.14 / self.h / self.h)
         self.Oc = self.Om - Ob - self.Omnu
         self.ns = ns
-        self.As_ = As_
-        self.As = As_ * 1e-9
+        if 'sigma8' in kwargs:
+            self.sig8 = kwargs['sigma8']
+        else:
+            self.sig8 = None 
+        if 'As' in kwargs:
+            self.As = kwargs['As']
+        else:
+            self.As = None 
+        # self.sig8 = sig8
         self.Ol = 1.0 - self.Om
         self.w = w
         self.wa = wa
@@ -32,22 +37,35 @@ class Cosmology_function:
         self.zsource = zs
         self.zini = 0.0
         self.zmax = 5      
-        self.pars = self._set_params()
-        self.results = camb.get_results(self.pars)
-        
-        self.nz_file = "/feynman/work/dap/lcs/vt272285/LDT_2cell_l1_norm/modules/nz_stage3_4.txt"
-
+        self.cosmoccl = self._set_params()
+        # self.volume = volume
+        self.kmin = kmin 
+        self.kmax = kmax
+        self.nk = 50
+        self.k_values = np.logspace(self.kmin, self.kmax, self.nk)
+        self.nz_file = nz_file 
+        print("the min and max values of k are: ", self.k_values[0], self.k_values[-1], "and length is: ", len(self.k_values))
     def _set_params(self):
-        return camb.set_params(H0=self.H0 * self.h, omch2=self.Oc * (self.h ** 2.),
-                               ombh2=self.Ob * (self.h ** 2.), NonLinear=camb.model.NonLinear_both,
-                               mnu=self.mnu, omnuh2=self.Omnu * self.h * self.h, As=self.As, ns=self.ns,
-                               halofit_version='takahashi',w=self.w, wa=self.wa, dark_energy_model='fluid')
+        if self.sig8 is not None:
+            return ccl.Cosmology(h=self.h, Omega_c=self.Oc ,
+                               Omega_b=self.Ob, sigma8=self.sig8, n_s=self.ns,
+                               w0=self.w, wa=self.wa,transfer_function='boltzmann_camb')
+        elif self.As is not None:
+            return ccl.Cosmology(h=self.h, Omega_c=self.Oc ,
+                               Omega_b=self.Ob, A_s=self.As, n_s=self.ns,
+                               w0=self.w, wa=self.wa,transfer_function='boltzmann_camb')
 
     def get_chi(self, redshift):
-        return self.results.comoving_radial_distance(redshift, tol=0.0000001) * self.h
+        a = 1 / (1 + redshift)
+        return ccl.comoving_radial_distance(self.cosmoccl, a) * self.h
+    
+    def getH(self, redshift):
+        a = 1 / (1 + redshift)
+        return ccl.h_over_h0(self.cosmoccl, a) * self.h * 100
 
     def get_z_from_chi(self, chi):
-        return self.results.redshift_at_comoving_radial_distance(chi / self.h)
+        a = ccl.scale_factor_of_chi(self.cosmoccl, chi / self.h)
+        return (1 / a) - 1
 
     def get_lensing_weight(self, chi, chi_source):
         z = self.get_z_from_chi(chi)
@@ -58,8 +76,14 @@ class Cosmology_function:
         lensing_weight = np.zeros_like(chis)
         for i in range(len(chis)):
             lensing_weight[i] = self.get_lensing_weight(chis[i], chi_source)
+            
+        plt.figure()
+        plt.plot(z_values, lensing_weight)
+        plt.xlabel('z')
+        plt.ylabel('Lensing weight')
+        plt.show()
 
-        return z_values, lensing_weight
+        return z_values, lensing_weight 
     
     def get_lensing_weight_array_nz(self, chis):
         """
@@ -70,20 +94,24 @@ class Cosmology_function:
             raise ValueError("nz_file must be provided for integrated lensing weight calculations.")
         
         # Load and normalize n(z)
-        nz = np.loadtxt(self.nz_file)
-        z_nz = nz[:, 0]
+        nz = np.load(self.nz_file)
+        self.z_nz = nz[:, 0]
         n_nz = nz[:, 1]
-        n_norm = n_nz /trapezoid(n_nz, z_nz)
+        self.n_norm = n_nz /trapezoid(n_nz, self.z_nz)
         
         # Pre-compute the comoving distance for each source redshift
-        chi_nz = self.results.comoving_radial_distance(z_nz, tol=0.0000001) * self.h
-        dz_dw = np.gradient(z_nz, chi_nz)  # Compute dz/dw'
-        q_s = n_norm * dz_dw
+        a = 1 / (1 + self.z_nz)
+       
+        
+        chi_nz = ccl.comoving_radial_distance(self.cosmoccl, a) * self.h
+        dz_dw = np.gradient(self.z_nz, chi_nz)  # Compute dz/dw'
+        q_s = self.n_norm * dz_dw
 
         lensing_weight = np.zeros_like(chis)
         z_values = self.get_z_from_chi(chis)
         
         for i, chi in enumerate(chis):
+            chi = chi #/ self.h
             # only consider sources that are behind the lens (chi_source > chi)
             mask = chi_nz > chi
             if np.sum(mask) == 0:
@@ -91,29 +119,22 @@ class Cosmology_function:
             else:
                 chi_nz_sel = chi_nz[mask]
                 q_s_sel = q_s[mask]
-                a_sel = 1 / (1 + z_nz[mask])  # Scale factor a(w')
+                a_sel = 1 / (1 + self.z_nz[mask])  # Scale factor a(w')
 
                 # The integrand: (1 - chi/chi_source) weighted by q_s
                 integrand = (chi * (chi_nz_sel - chi) / chi_nz_sel) * (q_s_sel / a_sel)
-
                 # Perform numerical integration
                 integral = trapezoid(integrand, chi_nz_sel)
                 
-                prefactor = 1.5 * self.Om * (self.H0 / self.speed_light) ** 2
+                prefactor = 1.5 * self.Om * ((self.H0 / self.speed_light) ** 2)
                 # Use standard prefactor (z here is the *lens* redshift)
                 lensing_weight[i] = prefactor * integral
                 
-        return z_values, lensing_weight
-        
-    def get_matter_power_interpolator(self, nonlinear=False, kmin=1e-3, kmax=150, nk=300):
-        self.k_values = np.logspace(np.log10(kmin), np.log10(kmax), nk, base=10)
+        # plt.figure()
+        # plt.plot(z_values, lensing_weight*self.h*self.h)
+        # plt.xlabel('z')
+        # plt.ylabel('Lensing weight')
+        # plt.show()
+                
+        return z_values, lensing_weight #*self.h*self.h
 
-        if nonlinear:
-            PK_interpolator = camb.get_matter_power_interpolator(self.pars, nonlinear=True,
-                hubble_units=True, k_hunit=True, kmax=kmax, zmax=self.zmax)
-        else:
-            PK_interpolator = camb.get_matter_power_interpolator(self.pars, nonlinear=False,
-                hubble_units=True, k_hunit=True, kmax=kmax, zmax=self.zmax)
-
-        # You can use PK_interpolator.P(z, k) to get the power spectrum at redshift z and wavenumber k
-        return PK_interpolator

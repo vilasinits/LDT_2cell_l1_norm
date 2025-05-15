@@ -1,8 +1,4 @@
-import numpy as np
-from scipy.interpolate import CubicSpline, UnivariateSpline
-import matplotlib.pyplot as plt
-from ratefunction_module import *
-
+from imports import *
 
 class CriticalPointsFinder:
     """
@@ -45,8 +41,8 @@ class CriticalPointsFinder:
         self.variables = variables
         self.plot = plot
         print(f"Setting ngrid = {ngrid}. Increase this for more accuracy, but note that computation becomes slower!")
-        self.delta1_vals = np.linspace(-0.99, 2.0, ngrid)
-        self.delta2_vals = np.linspace(-0.99, 2.0, ngrid)
+        self.delta1_vals = np.linspace(-.99, 3.99, ngrid)
+        self.delta2_vals = np.linspace(-.99, 3.99, ngrid)
         self.D1, self.D2 = np.meshgrid(self.delta1_vals, self.delta2_vals, indexing='ij')
 
     def get_hessian(self, x):
@@ -105,7 +101,7 @@ class CriticalPointsFinder:
         sorted_drf2 = drf2[sorted_indices,0]
         
         drf_spline = CubicSpline(sorted_drf1[:], sorted_drf2[:])
-        drf1_new = np.linspace(-6000,6000, 5000)
+        drf1_new = np.linspace(-10000,10000, 8000)
         drf2_new = drf_spline(drf1_new)
         sum_derivatives = (drf1_new + drf2_new) 
         # Fit spline to the sum of derivatives
@@ -122,3 +118,50 @@ class CriticalPointsFinder:
             plt.ylim(-2000,2000)
             plt.grid(visible=True, which='both', axis='both')
         return -critical_points1
+    
+    def rate_function_derivatives(d, deld, variance, chi_value, recal_value, z, theta1, theta2):
+        """
+        Returns the 2D vector of partial derivatives [dI/d(delta1), dI/d(delta2)] at point (d[0], d[1]).
+        """
+        d1, d2 = d
+        df1 = get_psi_derivative_delta1(deld, variance, chi_value, recal_value, z, d1, d2, theta1, theta2)
+        df2 = get_psi_derivative_delta2(deld, variance, chi_value, recal_value, z, d1, d2, theta1, theta2)
+        return np.array([df1, df2])
+    
+    def find_critical_points_scipy(variance, chi_value, recal_value, z, theta1, theta2,
+                               deld=1e-4,
+                               initial_guesses=[(-0.5, -0.5), (1.0, 1.0)]):
+        """
+        Finds critical points of the 2D rate function by solving for 
+        dI/d(delta1) = 0 and dI/d(delta2) = 0 via 2D root-finding.
+        
+        Parameters
+        ----------
+        variance, chi_value, recal_value, z, theta1, theta2 : float
+            Cosmology / lensing variables you already have.
+        deld : float
+            Small increment used in your finite-difference derivative functions.
+        initial_guesses : list of (float, float)
+            A list of (delta1, delta2) starting guesses for the solver.
+        
+        Returnsdbfgnfgh mbm,m,
+        -------
+        solutions : list
+            A list of distinct solutions (delta1, delta2) to the stationarity conditions.
+        """
+        solutions = []
+        for guess in initial_guesses:
+            sol = root(
+                fun=lambda d: rate_function_derivatives(
+                    d, deld, variance, chi_value, recal_value, z, theta1, theta2
+                ),
+                x0=np.array(guess),
+                method='hybr'  # or 'lm', 'broyden1', etc.
+            )
+            if sol.success:
+                # Round slightly to avoid listing the same solution multiple times if very close.
+                candidate = np.round(sol.x, decimals=5)
+                # Check if we already have this solution or something very close.
+                if not any(np.allclose(candidate, s) for s in solutions):
+                    solutions.append(candidate)
+        return solutions

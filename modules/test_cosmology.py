@@ -1,6 +1,4 @@
-import unittest
-from cosmology_module import Cosmology
-import sys
+from imports import *
 
 class TestCosmology(unittest.TestCase):
 
