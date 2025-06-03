@@ -38,7 +38,6 @@ class Cosmology_function:
         self.zini = 0.0
         self.zmax = 5      
         self.cosmoccl = self._set_params()
-        # self.volume = volume
         self.kmin = kmin 
         self.kmax = kmax
         self.nk = 200

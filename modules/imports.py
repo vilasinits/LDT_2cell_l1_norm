@@ -27,24 +27,7 @@ import unittest
 from scipy.stats import qmc
 import pandas as pd
 
-# # Third-party Libraries (Add any others like pandas, astropy, etc.)
-# try:
-#     import pyccl as ccl
-#     # --- halo‑model pieces ---
-#     from pyccl.halos import MassDef200m
-#     from pyccl.halos.massdef import MassDef200m
-#     from pyccl.halos.hmfunc.tinker10 import MassFuncTinker10
-#     from pyccl.halos.hbias.tinker10 import HaloBiasTinker10
-#     from pyccl.halos.concentration.duffy08 import ConcentrationDuffy08
-#     from pyccl.halos.profiles.nfw import HaloProfileNFW
-#     from pyccl.halos.halo_model import HMCalculator
-#     from pyccl.halos.pk_4pt import halomod_Tk3D_cNG   # full (1h+2h+3h+4h) trispectrum
-    
-# except ImportError:
-#     logging.warning("pyccl not found. CCL-dependent functions may fail.")
 
-
-# Project Modules (Import specific classes/functions or whole modules)
 try:
     # --- halo‑model pieces ---
     from pyccl.halos import MassDef200m
@@ -63,7 +46,7 @@ try:
     from modules.variables_module import *
     from modules.ratefunction_module import *
     from modules.takahashi_loader import *
-    from modules.test_cosmology import *
+    # from modules.test_cosmology import *
     from modules.computePDF_module import *
     from modules.criticalpoints_module import * 
     
