@@ -41,8 +41,9 @@ class Cosmology_function:
         # self.volume = volume
         self.kmin = kmin 
         self.kmax = kmax
-        self.nk = 50
+        self.nk = 200
         self.k_values = np.logspace(self.kmin, self.kmax, self.nk)
+        
         self.nz_file = nz_file 
         print("the min and max values of k are: ", self.k_values[0], self.k_values[-1], "and length is: ", len(self.k_values))
     def _set_params(self):
@@ -101,7 +102,6 @@ class Cosmology_function:
         
         # Pre-compute the comoving distance for each source redshift
         a = 1 / (1 + self.z_nz)
-       
         
         chi_nz = ccl.comoving_radial_distance(self.cosmoccl, a) * self.h
         dz_dw = np.gradient(self.z_nz, chi_nz)  # Compute dz/dw'
@@ -131,7 +131,7 @@ class Cosmology_function:
                 lensing_weight[i] = prefactor * integral
                 
         # plt.figure()
-        # plt.plot(z_values, lensing_weight*self.h*self.h)
+        # plt.plot(z_values, lensing_weight) #*self.h*self.h)
         # plt.xlabel('z')
         # plt.ylabel('Lensing weight')
         # plt.show()

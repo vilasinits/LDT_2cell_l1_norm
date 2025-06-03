@@ -1,7 +1,7 @@
 from imports import *
 
 class computePDF:
-    """
+    """ 
     A class to compute the Probability Distribution Function (PDF) for kappa using various
     cosmological and variance parameters contained within an instance of VariablesGenerator.
     """
@@ -48,8 +48,9 @@ class computePDF:
         coeffs = np.polyfit(x_data, y_data, 7)
         p = np.poly1d(coeffs)
         dp = p.deriv()
+        print("the coeffs are", p.coeffs)
         print(p.coeffs[-2]**2)
-        lambda_new = 1j * np.arange(0, 40000, 15)
+        lambda_new = 1j * np.arange(0, 40000, 20)
 
         taus = np.zeros_like(lambda_new, dtype=np.complex128)
 
@@ -80,7 +81,7 @@ class computePDF:
         """
         Computes PDF values for a range of kappa values.
         """
-        kappa_values = np.linspace(-0.1, 0.1, 1000)
+        kappa_values = np.linspace(-0.04, 0.04, 601)
         lambda_new, phi_values = self.compute_phi_values()
         pdf_values = [self.compute_pdf_for_kappa(kappa, lambda_new, phi_values) for kappa in kappa_values]
         return pdf_values, kappa_values

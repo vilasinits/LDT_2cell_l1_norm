@@ -25,7 +25,7 @@ def get_psi_2cell(variance, chi, recal, z, delta1, delta2, theta1, theta2):
     return psi
  
 def get_phi_projec_2cell(theta1, theta2, zarr, chis, dchis, w, y, recal, variance,**kwargs):
-    deld = kwargs.get('deld',1e-6)
+    deld = kwargs.get('deld',1e-8)
     nchi = len(chis)
     ny = len(y) 
     def to_solve2(delta, A, recal, chi, z):

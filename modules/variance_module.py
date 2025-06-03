@@ -42,71 +42,7 @@ class Variance:
             numpy.ndarray: The top-hat window function values at the given scale(s).
         """
         return 2. * scipy.special.j1(R) / R
-
-    # def S(self, n: int, b: float) -> float:
-    #     """
-    #     Computes the integral \( \int_0^b dx \ x^{n-1} J_n(x) \) from Appendix of 
-    #     https://ui.adsabs.harvard.edu/abs/2012A%26A...542A.122A/abstract.
-    #     This is a helper function for the analytical Hankel transform of the U-filter.
-
-    #     Args:
-    #         n (int): Order of the Bessel function.
-    #         b (float): Upper limit of the integral.
-
-    #     Raises:
-    #         ValueError: If `n` is not an integer.
-    #         ValueError: If `n` is smaller than -1, for which the integral does not converge.
-
-    #     Returns:
-    #         float: Computed value of the integral.
-    #     """
-    #     if not isinstance(n, int):
-    #         raise ValueError("n must be an integer.")
-    #     if n < -1:
-    #         raise ValueError("n cannot be smaller than -1.")
-        
-    #     b = np.asarray(b)  # Ensure b is a numpy array
-        
-    #     J0 =  sp.j0(b)
-    #     J1 = sp.j1(b)
-        
-    #     if n == 0:
-    #         return b * J1
-    #     elif n == -1:
-    #         return b * np.vectorize(lambda x: float(mp.hyp1f2(0.5, 1, 1.5, -x**2 / 4)))(b)
-    #     else:
-    #         return b**(n+1) * J1 + n * b**n * J0 - n**2 * self.S(n-2, b)
-    
-    # def uHat_starlet_analytical(self, eta):
-    #     """
-    #     Computes the analytical Hankel transform of the starlet U-filter.
-
-    #     Warning:
-    #         This implementation is not numerically stable for small `eta` (<=1e-2). 
-    #         To avoid instability, values below 2e-2 are replaced with  value for `eta=2e-2`.
-
-    #     Args:
-    #         eta (np.ndarray or float): Dimensionless argument \( \hat{u} \), corresponds to \( \theta \ell \).
-
-    #     Returns:
-    #         float: Computed value of \( \hat{u} \).
-    #     """
-    #     eta = np.asarray(eta)  # Ensure eta is a numpy array
-    #     eta_safe = np.clip(eta, 2e-2, 100)  # Avoid instability for small eta
-
-    #     factor1 = self.S(0, 0.5 * eta_safe) * 0.125 * eta_safe**3 - self.S(1, 0.5 * eta_safe) * 0.75 * eta_safe**2
-    #     factor1 += self.S(2, 0.5 * eta_safe) * 1.5 * eta_safe - self.S(3, 0.5 * eta_safe)
-        
-    #     factor2 = self.S(0, eta_safe) * eta_safe**3 - self.S(1, eta_safe) * 3 * eta_safe**2
-    #     factor2 += self.S(2, eta_safe) * 3 * eta_safe - self.S(3, eta_safe)
-        
-    #     factor3 = self.S(0, 2 * eta_safe) * 8 * eta_safe**3 - self.S(1, 2 * eta_safe) * 12 * eta_safe**2
-    #     factor3 += self.S(2, 2 * eta_safe) * 6 * eta_safe - self.S(3, 2 * eta_safe) 
-        
-
-    #     result = (2 * np.pi) * (-128 / 9 * factor1 + 4 * factor2 - 1 / 9 * factor3)/eta_safe**5
-        
-    #     return result
+   
     
     @staticmethod
     @lru_cache(maxsize=None)

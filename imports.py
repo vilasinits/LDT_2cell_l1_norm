@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.append('/feynman/work/dap/lcs/vt272285/LDT_2cell_l1_norm_recheck')
+sys.path.append('/feynman/work/dap/lcs/vt272285/final_codes/LDT_2cell_l1_norm')
 # Standard Libraries
 import numpy as np
 from numpy import newaxis

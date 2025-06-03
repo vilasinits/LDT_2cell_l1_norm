@@ -5,10 +5,7 @@ class CriticalPointsFinder:
     A class designed to identify critical points where the rate function's convexity changes in a cosmological context. 
     This is achieved through analyzing the Hessian matrix of the rate function across a grid of values, 
     identifying zero crossings in its determinant to locate changes in convexity.
-    """
-    
-    
-    """
+   
     The rate function $I(x)$ characterizes the exponential decay rate of the probabilities of certain outcomes as the system size increases. The rate function is required to be convex, which ensures that the study of rare events through large deviation principles can be approached effectively through minimization techniques.
 
     Cumulant Generating Function and Legendre-Fenchel Transform:
@@ -41,10 +38,10 @@ class CriticalPointsFinder:
         self.variables = variables
         self.plot = plot
         print(f"Setting ngrid = {ngrid}. Increase this for more accuracy, but note that computation becomes slower!")
-        self.delta1_vals = np.linspace(-.99, 3.99, ngrid)
-        self.delta2_vals = np.linspace(-.99, 3.99, ngrid)
+        self.delta1_vals = np.linspace(-.99, 1.99, ngrid)
+        self.delta2_vals = np.linspace(-.99, 1.99, ngrid)
         self.D1, self.D2 = np.meshgrid(self.delta1_vals, self.delta2_vals, indexing='ij')
-
+    
     def get_hessian(self, x):
         """Calculates the Hessian matrix of a function."""
         x_grad = np.gradient(x) 
@@ -61,7 +58,7 @@ class CriticalPointsFinder:
         zero_crossing_x = x1 + t * (x2 - x1)
         zero_crossing_y = y1 + t * (y2 - y1)
         return zero_crossing_x, zero_crossing_y
-
+ 
     def find_zero_crossings(self, determinant):
         """Identifies zero crossings in the determinant grid."""
         zero_crossings = []
@@ -73,7 +70,7 @@ class CriticalPointsFinder:
                 if determinant[i, j] * determinant[i+1, j] <= 0:
                     newx, newy = self.find_zero_crossing_point(self.D1[i, j], self.D2[i, j], self.D1[i+1, j], self.D2[i+1, j], determinant[i, j], determinant[i+1, j]) 
                     zero_crossings.append((newx, newy))
-        return zero_crossings
+        return zero_crossings  
     
     def get_critical_points(self, z):
         """Calculates critical points for the given redshift z and plots them if requested."""
@@ -83,16 +80,18 @@ class CriticalPointsFinder:
         theta2 = self.variables.theta2_radian
         chi_source = self.variables.chi_source
 
-        deld = 1e-4
+        deld = 1e-8
         rate_function = np.vectorize(lambda d1, d2: get_psi_2cell(self.variables.variance, chi_value, recal_value, z, d1, d2, theta1, theta2))(self.D1, self.D2)
-        lw = self.variables.cosmo.get_lensing_weight(chi_value, chi_source)
+        # lw = self.variables.cosmo.get_lensing_weight(chi_value, chi_source)
+        
+        lw = self.variables.cosmo.get_lensing_weight_array_nz(np.array([chi_value]))[1]
         hessian = np.array(self.get_hessian(rate_function))
         determinants = np.array((hessian[0, 0, :, :] * hessian[1, 1, :, :]) - (hessian[0, 1, :, :] * hessian[1, 0, :, :]))
         zero_crossings = np.array(self.find_zero_crossings(determinants))
         drf1, drf2 = [], []
         for x, y in zero_crossings:
-            drf1.append(get_psi_derivative_delta1(deld, self.variables.variance, chi_value, recal_value, z, x, y, theta1, theta2) / lw)
-            drf2.append(get_psi_derivative_delta2(deld, self.variables.variance, chi_value, recal_value, z, x, y, theta1, theta2) / lw)
+            drf1.append(get_psi_derivative_delta1(deld, self.variables.variance, chi_value, recal_value, z, x, y, theta1, theta2) * self.variables.cosmo.h  / lw)
+            drf2.append(get_psi_derivative_delta2(deld, self.variables.variance, chi_value, recal_value, z, x, y, theta1, theta2) * self.variables.cosmo.h / lw)
         drf1, drf2 = np.array(drf1), np.array(drf2)
         
         sorted_indices = np.argsort(drf1[:,0])
@@ -101,7 +100,7 @@ class CriticalPointsFinder:
         sorted_drf2 = drf2[sorted_indices,0]
         
         drf_spline = CubicSpline(sorted_drf1[:], sorted_drf2[:])
-        drf1_new = np.linspace(-10000,10000, 8000)
+        drf1_new = np.linspace(-1000,2000, 100)
         drf2_new = drf_spline(drf1_new)
         sum_derivatives = (drf1_new + drf2_new) 
         # Fit spline to the sum of derivatives
@@ -114,23 +113,27 @@ class CriticalPointsFinder:
         if self.plot:
             plt.plot(drf1_new, sum_derivatives,label=z) 
             plt.scatter(critical_points1,spline1(critical_points1),color='r') 
-            plt.xlim(-2000,2000)
-            plt.ylim(-2000,2000)
+            plt.xlim(-1000,2000)
+            plt.ylim(-1000,2000)
             plt.grid(visible=True, which='both', axis='both')
+            plt.legend()
         return -critical_points1
-    
-    def rate_function_derivatives(d, deld, variance, chi_value, recal_value, z, theta1, theta2):
+
+    def rate_function_derivatives(self,d, deld, variance, chi_value, recal_value, z, theta1, theta2):
         """
         Returns the 2D vector of partial derivatives [dI/d(delta1), dI/d(delta2)] at point (d[0], d[1]).
         """
         d1, d2 = d
-        df1 = get_psi_derivative_delta1(deld, variance, chi_value, recal_value, z, d1, d2, theta1, theta2)
-        df2 = get_psi_derivative_delta2(deld, variance, chi_value, recal_value, z, d1, d2, theta1, theta2)
-        return np.array([df1, df2])
-    
-    def find_critical_points_scipy(variance, chi_value, recal_value, z, theta1, theta2,
-                               deld=1e-4,
-                               initial_guesses=[(-0.5, -0.5), (1.0, 1.0)]):
+        chi_value = self.variables.cosmo.get_chi(z)
+        chi_source = self.variables.chi_source
+        lw = self.variables.cosmo.get_lensing_weight(chi_value, chi_source) 
+        df1 = get_psi_derivative_delta1(deld, variance, chi_value, recal_value, z, d1, d2, theta1, theta2)/lw
+        df2 = get_psi_derivative_delta2(deld, variance, chi_value, recal_value, z, d1, d2, theta1, theta2)/lw
+        temp = np.array([df1, df2])
+        return temp[:,0]
+        # return np.array([[df1],[df2]])  # shape (2, 1)
+
+    def find_critical_points_grid_scipy(self,z, deld=1e-4, initial_guesses=[(-0.05, -0.05), (.0, .0)]):
         """
         Finds critical points of the 2D rate function by solving for 
         dI/d(delta1) = 0 and dI/d(delta2) = 0 via 2D root-finding.
@@ -144,20 +147,19 @@ class CriticalPointsFinder:
         initial_guesses : list of (float, float)
             A list of (delta1, delta2) starting guesses for the solver.
         
-        Returnsdbfgnfgh mbm,m,
         -------
         solutions : list
             A list of distinct solutions (delta1, delta2) to the stationarity conditions.
         """
         solutions = []
+        chi_value = self.variables.cosmo.get_chi(z)
+        variance = self.variables.variance
+        recal_value = self.variables.recal_value
+        theta1 = self.variables.theta1_radian
+        theta2 = self.variables.theta2_radian
         for guess in initial_guesses:
-            sol = root(
-                fun=lambda d: rate_function_derivatives(
-                    d, deld, variance, chi_value, recal_value, z, theta1, theta2
-                ),
-                x0=np.array(guess),
-                method='hybr'  # or 'lm', 'broyden1', etc.
-            )
+            sol = root(fun=lambda d: self.rate_function_derivatives(d, deld, variance, chi_value, recal_value, z, theta1, theta2), x0 = np.array(guess), method='hybr')
+
             if sol.success:
                 # Round slightly to avoid listing the same solution multiple times if very close.
                 candidate = np.round(sol.x, decimals=5)
