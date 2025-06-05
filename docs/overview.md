@@ -1,7 +1,5 @@
 # Overview
 
-Overview
-========
 
 The `LDT_2cell_l1_norm` package provides a theoretical framework to model the wavelet ℓ₁-norm of weak lensing convergence maps. This is achieved using predictions of the one-point probability distribution function (PDF) at each wavelet scale, based on large-deviation theory (LDT). The method enables simulation-free inference of higher-order statistics in cosmological fields.
 
@@ -16,14 +14,14 @@ The package is in its **initial phase** and several features are still being tes
 
 - A model for incorporating **stochasticity**
 - Support for real data inputs
-- EXtension to additional filtering schemes
+- Extension to additional filtering schemes
 
 Key Features
 ------------
 
 - Predicts the expected ℓ₁-norm at each wavelet scale from theory
 - Includes a model for incorporating **stochasticity**, currently under testing
-- 
+- Modular
 
 Modules include:
 
