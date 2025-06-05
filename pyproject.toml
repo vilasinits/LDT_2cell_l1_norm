@@ -1,0 +1,5 @@
+[project]
+name = "l1p"
+requires-python = ">=3.11"
+dependencies = ["numpy"]
+version = "0.0.1"
