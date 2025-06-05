@@ -1,0 +1,176 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>waveletl1.ldt2celll1norm module &mdash; wavelet l1-norm prediction tool 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="waveletl1.powspec module" href="waveletl1.powspec.html" />
+    <link rel="prev" title="waveletl1.filters module" href="waveletl1.filters.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            wavelet l1-norm prediction tool
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="waveletl1.html">waveletl1 package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="waveletl1.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.calculations_from_simulations.html">waveletl1.calculations_from_simulations module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.computePDF.html">waveletl1.computePDF module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.cosmology.html">waveletl1.cosmology module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.covariance.html">waveletl1.covariance module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.criticalpoints.html">waveletl1.criticalpoints module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.filters.html">waveletl1.filters module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">waveletl1.ldt2celll1norm module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#waveletl1.ldt2celll1norm.find_critical_points_for_cosmo"><code class="docutils literal notranslate"><span class="pre">find_critical_points_for_cosmo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#waveletl1.ldt2celll1norm.setup_cosmology_and_variance"><code class="docutils literal notranslate"><span class="pre">setup_cosmology_and_variance()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.powspec.html">waveletl1.powspec module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.ratefunction.html">waveletl1.ratefunction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.takahashi_loader.html">waveletl1.takahashi_loader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.utils.html">waveletl1.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.variables.html">waveletl1.variables module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.variance.html">waveletl1.variance module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">wavelet l1-norm prediction tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="waveletl1.html">waveletl1 package</a></li>
+      <li class="breadcrumb-item active">waveletl1.ldt2celll1norm module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/waveletl1.ldt2celll1norm.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-waveletl1.ldt2celll1norm">
+<span id="waveletl1-ldt2celll1norm-module"></span><h1>waveletl1.ldt2celll1norm module<a class="headerlink" href="#module-waveletl1.ldt2celll1norm" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="waveletl1.ldt2celll1norm.find_critical_points_for_cosmo">
+<span class="sig-prename descclassname"><span class="pre">waveletl1.ldt2celll1norm.</span></span><span class="sig-name descname"><span class="pre">find_critical_points_for_cosmo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ngrid_critical</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waveletl1/ldt2celll1norm.html#find_critical_points_for_cosmo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waveletl1.ldt2celll1norm.find_critical_points_for_cosmo" title="Link to this definition"></a></dt>
+<dd><p>Finds critical points in the lensing potential based on the provided variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variables</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>ngrid_critical</strong> (<em>int</em><em>, </em><em>optional</em>) – _description_. Defaults to 90.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Smallest positive and largest negative critical point values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waveletl1.ldt2celll1norm.setup_cosmology_and_variance">
+<span class="sig-prename descclassname"><span class="pre">waveletl1.ldt2celll1norm.</span></span><span class="sig-name descname"><span class="pre">setup_cosmology_and_variance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cosmology_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zs_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kmin_pk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kmax_pk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nz_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_lensing_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variability</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta1_arcmin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waveletl1/ldt2celll1norm.html#setup_cosmology_and_variance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waveletl1.ldt2celll1norm.setup_cosmology_and_variance" title="Link to this definition"></a></dt>
+<dd><p>Sets up the cosmology and variance calculations for lensing analysis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cosmology_params</strong> – _Description of cosmology parameters, e.g., h, Om, Oc, sig8, w0, wa, etc._</p></li>
+<li><p><strong>zs_source</strong> – _source redshift for lensing <a href="#id1"><span class="problematic" id="id2">calculations_</span></a></p></li>
+<li><p><strong>kmin_pk</strong> – _minimum k value for power spectrum <a href="#id3"><span class="problematic" id="id4">calculations_</span></a></p></li>
+<li><p><strong>kmax_pk</strong> – _maximum k value for power spectrum <a href="#id5"><span class="problematic" id="id6">calculations_</span></a></p></li>
+<li><p><strong>nz_file</strong> – _optional file containing redshift distribution data for lensing weight <a href="#id7"><span class="problematic" id="id8">calculations_</span></a></p></li>
+<li><p><strong>n_lensing_planes</strong> – _number of lensing planes to consider in the <a href="#id9"><span class="problematic" id="id10">calculations_</span></a></p></li>
+<li><p><strong>filter_type</strong> – _type_ of filter to apply for lensing calculations, e.g., ‘top_hat’, ‘gaussian’, etc._</p></li>
+<li><p><strong>variability</strong> – _boolean indicating whether to include variability in the <a href="#id11"><span class="problematic" id="id12">calculations_</span></a></p></li>
+<li><p><strong>theta1_arcmin</strong> – _angular scale in arcminutes for lensing <a href="#id13"><span class="problematic" id="id14">calculations_</span></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The <cite>VariablesGenerator</cite> instance containing all necessary variables for further calculations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="waveletl1.filters.html" class="btn btn-neutral float-left" title="waveletl1.filters module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="waveletl1.powspec.html" class="btn btn-neutral float-right" title="waveletl1.powspec module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Vilasini Tinnaneri Sreekanth.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

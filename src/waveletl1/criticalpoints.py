@@ -7,30 +7,41 @@ from scipy.optimize import root
 from .ratefunction import get_psi_2cell, get_psi_derivative_delta1, get_psi_derivative_delta2
  
 class CriticalPointsFinder:
-    """
+    r"""
     A class designed to identify critical points where the rate function's convexity changes in a cosmological context. 
     This is achieved through analyzing the Hessian matrix of the rate function across a grid of values, 
     identifying zero crossings in its determinant to locate changes in convexity.
-   
-    The rate function $I(x)$ characterizes the exponential decay rate of the probabilities of certain outcomes as the system size increases. The rate function is required to be convex, which ensures that the study of rare events through large deviation principles can be approached effectively through minimization techniques.
 
-    Cumulant Generating Function and Legendre-Fenchel Transform:
-    The CGF, denoted by $\Lambda(\theta)$, is foundational for deriving the rate function through the Legendre-Fenchel transform. This transform connects the CGF and the rate function as follows:
+    The rate function :math:`I(x)` characterizes the exponential decay rate of the probabilities of certain outcomes 
+    as the system size increases. The rate function is required to be convex, which ensures that the study of rare 
+    events through large deviation principles can be approached effectively through minimization techniques.
 
-    $I(x) = \sup_{\theta} \{\theta x - \Lambda(\theta)\}$
+    **Cumulant Generating Function and Legendre-Fenchel Transform**  
+    The CGF, denoted by :math:`\Lambda(\theta)`, is foundational for deriving the rate function through the Legendre-Fenchel transform. 
+    This transform connects the CGF and the rate function as follows:
 
-    This equation ensures that the rate function $I(x)$ is convex, inheriting this property from the convex CGF $\Lambda(\theta)$. The supremum operation over $\theta$ highlights that $I(x)$ represents the tightest upper bound of the linear functions defined by $\theta x - \Lambda(\theta)$.
+    .. math::
 
-    Convexity of the Rate Function
-    The convexity of the rate function $I(x)$ implies the following inequality for any two points $x_1$ and $x_2$ in its domain and any $\lambda \in [0, 1]$:
+        I(x) = \sup_{\theta} \{ \theta x - \Lambda(\theta) \}
 
-    $I(\lambda x_1 + (1 - \lambda)x_2) \leq \lambda I(x_1) + (1 - \lambda)I(x_2)$
+    This equation ensures that the rate function :math:`I(x)` is convex, inheriting this property from the convex CGF :math:`\Lambda(\theta)`. 
+    The supremum operation over :math:`\theta` highlights that :math:`I(x)` represents the tightest upper bound 
+    of the linear functions defined by :math:`\theta x - \Lambda(\theta)`.
+
+    **Convexity of the Rate Function**  
+    The convexity of the rate function :math:`I(x)` implies the following inequality for any two points :math:`x_1` and :math:`x_2` 
+    in its domain and any :math:`\lambda \in [0, 1]`:
+
+    .. math::
+
+        I(\lambda x_1 + (1 - \lambda)x_2) \leq \lambda I(x_1) + (1 - \lambda) I(x_2)
 
     This inequality defines the convexity of the rate function, critical for analyzing rare events in large deviation theory.
 
-    In this function we try to use the hessian determinants of the rate function to calculate the points where it is 0 and use that to find the value of lambda which we use in our calculation
-
+    In this method, we use the determinant of the Hessian of the rate function to locate points where it vanishes. 
+    These points help identify the values of :math:`\lambda` used in our subsequent calculations.
     """
+
 
     def __init__(self, variables, ngrid=50, plot=False):
         """
