@@ -1,0 +1,27 @@
+waveletl1 package
+=================
+
+.. automodule:: waveletl1
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   waveletl1.calculations_from_simulations
+   waveletl1.computePDF
+   waveletl1.cosmology
+   waveletl1.covariance
+   waveletl1.criticalpoints
+   waveletl1.filters
+   waveletl1.ldt2celll1norm
+   waveletl1.powspec
+   waveletl1.ratefunction
+   waveletl1.takahashi_loader
+   waveletl1.utils
+   waveletl1.variables
+   waveletl1.variance

@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>waveletl1.variables module &mdash; wavelet l1-norm prediction tool 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="waveletl1.variance module" href="waveletl1.variance.html" />
+    <link rel="prev" title="waveletl1.utils module" href="waveletl1.utils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            wavelet l1-norm prediction tool
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="waveletl1.html">waveletl1 package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="waveletl1.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.calculations_from_simulations.html">waveletl1.calculations_from_simulations module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.computePDF.html">waveletl1.computePDF module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.cosmology.html">waveletl1.cosmology module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.covariance.html">waveletl1.covariance module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.criticalpoints.html">waveletl1.criticalpoints module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.filters.html">waveletl1.filters module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.ldt2celll1norm.html">waveletl1.ldt2celll1norm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.powspec.html">waveletl1.powspec module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.ratefunction.html">waveletl1.ratefunction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.takahashi_loader.html">waveletl1.takahashi_loader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.utils.html">waveletl1.utils module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">waveletl1.variables module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#waveletl1.variables.VariablesGenerator"><code class="docutils literal notranslate"><span class="pre">VariablesGenerator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.variance.html">waveletl1.variance module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">wavelet l1-norm prediction tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="waveletl1.html">waveletl1 package</a></li>
+      <li class="breadcrumb-item active">waveletl1.variables module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/waveletl1.variables.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-waveletl1.variables">
+<span id="waveletl1-variables-module"></span><h1>waveletl1.variables module<a class="headerlink" href="#module-waveletl1.variables" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="waveletl1.variables.VariablesGenerator">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waveletl1.variables.</span></span><span class="sig-name descname"><span class="pre">VariablesGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cosmo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nz_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nplanes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dchis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lensing_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waveletl1/variables.html#VariablesGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waveletl1.variables.VariablesGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Stores configuration and calculates the final map variance (sigmasq_map).
+Relies on injected cosmology, variance, and pre-calculated plane information.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waveletl1.variables.VariablesGenerator.cosmo">
+<span class="sig-name descname"><span class="pre">cosmo</span></span><a class="headerlink" href="#waveletl1.variables.VariablesGenerator.cosmo" title="Link to this definition"></a></dt>
+<dd><p>Injected cosmology object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="waveletl1.cosmology.html#waveletl1.cosmology.Cosmology_function" title="waveletl1.cosmology.Cosmology_function">Cosmology_function</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waveletl1.variables.VariablesGenerator.variance">
+<span class="sig-name descname"><span class="pre">variance</span></span><a class="headerlink" href="#waveletl1.variables.VariablesGenerator.variance" title="Link to this definition"></a></dt>
+<dd><p>Injected variance object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="waveletl1.variance.html#waveletl1.variance.Variance" title="waveletl1.variance.Variance">Variance</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waveletl1.variables.VariablesGenerator.zs">
+<span class="sig-name descname"><span class="pre">zs</span></span><a class="headerlink" href="#waveletl1.variables.VariablesGenerator.zs" title="Link to this definition"></a></dt>
+<dd><p>Source redshift.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waveletl1.variables.VariablesGenerator.theta1_radian">
+<span class="sig-name descname"><span class="pre">theta1_radian</span></span><a class="headerlink" href="#waveletl1.variables.VariablesGenerator.theta1_radian" title="Link to this definition"></a></dt>
+<dd><p>Angular scale in radians converted from arcminutes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waveletl1.variables.VariablesGenerator.theta2_radian">
+<span class="sig-name descname"><span class="pre">theta2_radian</span></span><a class="headerlink" href="#waveletl1.variables.VariablesGenerator.theta2_radian" title="Link to this definition"></a></dt>
+<dd><p>Twice the angular scale of theta1 in radians.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waveletl1.variables.VariablesGenerator.nz_file">
+<span class="sig-name descname"><span class="pre">nz_file</span></span><a class="headerlink" href="#waveletl1.variables.VariablesGenerator.nz_file" title="Link to this definition"></a></dt>
+<dd><p>Path to redshift distribution file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waveletl1.variables.VariablesGenerator.nplanes">
+<span class="sig-name descname"><span class="pre">nplanes</span></span><a class="headerlink" href="#waveletl1.variables.VariablesGenerator.nplanes" title="Link to this definition"></a></dt>
+<dd><p>Number of lensing planes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waveletl1.variables.VariablesGenerator.chis">
+<span class="sig-name descname"><span class="pre">chis</span></span><a class="headerlink" href="#waveletl1.variables.VariablesGenerator.chis" title="Link to this definition"></a></dt>
+<dd><p>Comoving distances to lensing planes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waveletl1.variables.VariablesGenerator.dchis">
+<span class="sig-name descname"><span class="pre">dchis</span></span><a class="headerlink" href="#waveletl1.variables.VariablesGenerator.dchis" title="Link to this definition"></a></dt>
+<dd><p>Differential comoving distances for integration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waveletl1.variables.VariablesGenerator.z_array">
+<span class="sig-name descname"><span class="pre">z_array</span></span><a class="headerlink" href="#waveletl1.variables.VariablesGenerator.z_array" title="Link to this definition"></a></dt>
+<dd><p>Redshifts corresponding to chis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waveletl1.variables.VariablesGenerator.lensing_weight">
+<span class="sig-name descname"><span class="pre">lensing_weight</span></span><a class="headerlink" href="#waveletl1.variables.VariablesGenerator.lensing_weight" title="Link to this definition"></a></dt>
+<dd><p>Lensing weights at each plane.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waveletl1.variables.VariablesGenerator.sigmasq_map">
+<span class="sig-name descname"><span class="pre">sigmasq_map</span></span><a class="headerlink" href="#waveletl1.variables.VariablesGenerator.sigmasq_map" title="Link to this definition"></a></dt>
+<dd><p>The calculated mass map variance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waveletl1.variables.VariablesGenerator.recal_value">
+<span class="sig-name descname"><span class="pre">recal_value</span></span><a class="headerlink" href="#waveletl1.variables.VariablesGenerator.recal_value" title="Link to this definition"></a></dt>
+<dd><p>Recalibration value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waveletl1.variables.VariablesGenerator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cosmo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nz_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nplanes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dchis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lensing_weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waveletl1/variables.html#VariablesGenerator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waveletl1.variables.VariablesGenerator.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the VariablesGenerator with injected objects and configuration.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="waveletl1.utils.html" class="btn btn-neutral float-left" title="waveletl1.utils module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="waveletl1.variance.html" class="btn btn-neutral float-right" title="waveletl1.variance module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Vilasini Tinnaneri Sreekanth.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

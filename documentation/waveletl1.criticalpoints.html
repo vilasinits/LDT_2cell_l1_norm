@@ -1,0 +1,254 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>waveletl1.criticalpoints module &mdash; wavelet l1-norm prediction tool 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="waveletl1.filters module" href="waveletl1.filters.html" />
+    <link rel="prev" title="waveletl1.covariance module" href="waveletl1.covariance.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            wavelet l1-norm prediction tool
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="waveletl1.html">waveletl1 package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="waveletl1.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.calculations_from_simulations.html">waveletl1.calculations_from_simulations module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.computePDF.html">waveletl1.computePDF module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.cosmology.html">waveletl1.cosmology module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.covariance.html">waveletl1.covariance module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">waveletl1.criticalpoints module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#waveletl1.criticalpoints.CriticalPointsFinder"><code class="docutils literal notranslate"><span class="pre">CriticalPointsFinder</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#waveletl1.criticalpoints.find_smallest_pair"><code class="docutils literal notranslate"><span class="pre">find_smallest_pair()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.filters.html">waveletl1.filters module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.ldt2celll1norm.html">waveletl1.ldt2celll1norm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.powspec.html">waveletl1.powspec module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.ratefunction.html">waveletl1.ratefunction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.takahashi_loader.html">waveletl1.takahashi_loader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.utils.html">waveletl1.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.variables.html">waveletl1.variables module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waveletl1.variance.html">waveletl1.variance module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">wavelet l1-norm prediction tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="waveletl1.html">waveletl1 package</a></li>
+      <li class="breadcrumb-item active">waveletl1.criticalpoints module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/waveletl1.criticalpoints.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-waveletl1.criticalpoints">
+<span id="waveletl1-criticalpoints-module"></span><h1>waveletl1.criticalpoints module<a class="headerlink" href="#module-waveletl1.criticalpoints" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="waveletl1.criticalpoints.CriticalPointsFinder">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waveletl1.criticalpoints.</span></span><span class="sig-name descname"><span class="pre">CriticalPointsFinder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ngrid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waveletl1/criticalpoints.html#CriticalPointsFinder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waveletl1.criticalpoints.CriticalPointsFinder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class designed to identify critical points where the rate function’s convexity changes in a cosmological context.
+This is achieved through analyzing the Hessian matrix of the rate function across a grid of values,
+identifying zero crossings in its determinant to locate changes in convexity.</p>
+<p>The rate function <span class="math notranslate nohighlight">\(I(x)\)</span> characterizes the exponential decay rate of the probabilities of certain outcomes
+as the system size increases. The rate function is required to be convex, which ensures that the study of rare
+events through large deviation principles can be approached effectively through minimization techniques.</p>
+<p><strong>Cumulant Generating Function and Legendre-Fenchel Transform</strong>
+The CGF, denoted by <span class="math notranslate nohighlight">\(\Lambda(\theta)\)</span>, is foundational for deriving the rate function through the Legendre-Fenchel transform.
+This transform connects the CGF and the rate function as follows:</p>
+<div class="math notranslate nohighlight">
+\[I(x) = \sup_{\theta} \{ \theta x - \Lambda(\theta) \}\]</div>
+<p>This equation ensures that the rate function <span class="math notranslate nohighlight">\(I(x)\)</span> is convex, inheriting this property from the convex CGF <span class="math notranslate nohighlight">\(\Lambda(\theta)\)</span>.
+The supremum operation over <span class="math notranslate nohighlight">\(\theta\)</span> highlights that <span class="math notranslate nohighlight">\(I(x)\)</span> represents the tightest upper bound
+of the linear functions defined by <span class="math notranslate nohighlight">\(\theta x - \Lambda(\theta)\)</span>.</p>
+<p><strong>Convexity of the Rate Function</strong>
+The convexity of the rate function <span class="math notranslate nohighlight">\(I(x)\)</span> implies the following inequality for any two points <span class="math notranslate nohighlight">\(x_1\)</span> and <span class="math notranslate nohighlight">\(x_2\)</span>
+in its domain and any <span class="math notranslate nohighlight">\(\lambda \in [0, 1]\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[I(\lambda x_1 + (1 - \lambda)x_2) \leq \lambda I(x_1) + (1 - \lambda) I(x_2)\]</div>
+<p>This inequality defines the convexity of the rate function, critical for analyzing rare events in large deviation theory.</p>
+<p>In this method, we use the determinant of the Hessian of the rate function to locate points where it vanishes.
+These points help identify the values of <span class="math notranslate nohighlight">\(\lambda\)</span> used in our subsequent calculations.</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waveletl1.criticalpoints.CriticalPointsFinder.find_critical_points_grid_scipy" title="waveletl1.criticalpoints.CriticalPointsFinder.find_critical_points_grid_scipy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_critical_points_grid_scipy</span></code></a>(z[, deld, ...])</p></td>
+<td><p>Finds critical points of the 2D rate function by solving for dI/d(delta1) = 0 and dI/d(delta2) = 0 via 2D root-finding.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#waveletl1.criticalpoints.CriticalPointsFinder.find_zero_crossing_point" title="waveletl1.criticalpoints.CriticalPointsFinder.find_zero_crossing_point"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_zero_crossing_point</span></code></a>(x1, y1, x2, y2, ...)</p></td>
+<td><p>Finds the zero crossing point between two points based on the determinant values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waveletl1.criticalpoints.CriticalPointsFinder.find_zero_crossings" title="waveletl1.criticalpoints.CriticalPointsFinder.find_zero_crossings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_zero_crossings</span></code></a>(determinant)</p></td>
+<td><p>Identifies zero crossings in the determinant grid.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#waveletl1.criticalpoints.CriticalPointsFinder.get_critical_points" title="waveletl1.criticalpoints.CriticalPointsFinder.get_critical_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_critical_points</span></code></a>(z)</p></td>
+<td><p>Calculates critical points for the given redshift z and plots them if requested.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waveletl1.criticalpoints.CriticalPointsFinder.get_hessian" title="waveletl1.criticalpoints.CriticalPointsFinder.get_hessian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hessian</span></code></a>(x)</p></td>
+<td><p>Calculates the Hessian matrix of a function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#waveletl1.criticalpoints.CriticalPointsFinder.rate_function_derivatives" title="waveletl1.criticalpoints.CriticalPointsFinder.rate_function_derivatives"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rate_function_derivatives</span></code></a>(d, deld, variance, ...)</p></td>
+<td><p>Returns the 2D vector of partial derivatives [dI/d(delta1), dI/d(delta2)] at point (d[0], d[1]).</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="waveletl1.criticalpoints.CriticalPointsFinder.find_critical_points_grid_scipy">
+<span class="sig-name descname"><span class="pre">find_critical_points_grid_scipy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deld</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_guesses</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[(-0.05,</span> <span class="pre">-0.05),</span> <span class="pre">(0.0,</span> <span class="pre">0.0)]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waveletl1/criticalpoints.html#CriticalPointsFinder.find_critical_points_grid_scipy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waveletl1.criticalpoints.CriticalPointsFinder.find_critical_points_grid_scipy" title="Link to this definition"></a></dt>
+<dd><p>Finds critical points of the 2D rate function by solving for
+dI/d(delta1) = 0 and dI/d(delta2) = 0 via 2D root-finding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variance</strong> (<em>float</em>) – Cosmology / lensing variables you already have.</p></li>
+<li><p><strong>chi_value</strong> (<em>float</em>) – Cosmology / lensing variables you already have.</p></li>
+<li><p><strong>recal_value</strong> (<em>float</em>) – Cosmology / lensing variables you already have.</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – Cosmology / lensing variables you already have.</p></li>
+<li><p><strong>theta1</strong> (<em>float</em>) – Cosmology / lensing variables you already have.</p></li>
+<li><p><strong>theta2</strong> (<em>float</em>) – Cosmology / lensing variables you already have.</p></li>
+<li><p><strong>deld</strong> (<em>float</em>) – Small increment used in your finite-difference derivative functions.</p></li>
+<li><p><strong>initial_guesses</strong> (<em>list</em><em> of </em><em>(</em><em>float</em><em>, </em><em>float</em><em>)</em>) – A list of (delta1, delta2) starting guesses for the solver.</p></li>
+<li><p><strong>-------</strong></p></li>
+<li><p><strong>solutions</strong> (<em>list</em>) – A list of distinct solutions (delta1, delta2) to the stationarity conditions.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waveletl1.criticalpoints.CriticalPointsFinder.find_zero_crossing_point">
+<span class="sig-name descname"><span class="pre">find_zero_crossing_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">determinant_value1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">determinant_value2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waveletl1/criticalpoints.html#CriticalPointsFinder.find_zero_crossing_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waveletl1.criticalpoints.CriticalPointsFinder.find_zero_crossing_point" title="Link to this definition"></a></dt>
+<dd><p>Finds the zero crossing point between two points based on the determinant values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waveletl1.criticalpoints.CriticalPointsFinder.find_zero_crossings">
+<span class="sig-name descname"><span class="pre">find_zero_crossings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">determinant</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waveletl1/criticalpoints.html#CriticalPointsFinder.find_zero_crossings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waveletl1.criticalpoints.CriticalPointsFinder.find_zero_crossings" title="Link to this definition"></a></dt>
+<dd><p>Identifies zero crossings in the determinant grid.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waveletl1.criticalpoints.CriticalPointsFinder.get_critical_points">
+<span class="sig-name descname"><span class="pre">get_critical_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waveletl1/criticalpoints.html#CriticalPointsFinder.get_critical_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waveletl1.criticalpoints.CriticalPointsFinder.get_critical_points" title="Link to this definition"></a></dt>
+<dd><p>Calculates critical points for the given redshift z and plots them if requested.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waveletl1.criticalpoints.CriticalPointsFinder.get_hessian">
+<span class="sig-name descname"><span class="pre">get_hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waveletl1/criticalpoints.html#CriticalPointsFinder.get_hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waveletl1.criticalpoints.CriticalPointsFinder.get_hessian" title="Link to this definition"></a></dt>
+<dd><p>Calculates the Hessian matrix of a function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waveletl1.criticalpoints.CriticalPointsFinder.rate_function_derivatives">
+<span class="sig-name descname"><span class="pre">rate_function_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deld</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recal_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waveletl1/criticalpoints.html#CriticalPointsFinder.rate_function_derivatives"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waveletl1.criticalpoints.CriticalPointsFinder.rate_function_derivatives" title="Link to this definition"></a></dt>
+<dd><p>Returns the 2D vector of partial derivatives [dI/d(delta1), dI/d(delta2)] at point (d[0], d[1]).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waveletl1.criticalpoints.find_smallest_pair">
+<span class="sig-prename descclassname"><span class="pre">waveletl1.criticalpoints.</span></span><span class="sig-name descname"><span class="pre">find_smallest_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">critical_values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/waveletl1/criticalpoints.html#find_smallest_pair"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#waveletl1.criticalpoints.find_smallest_pair" title="Link to this definition"></a></dt>
+<dd><p>Finds the pair of points with the smallest Euclidean distance between them from a set of critical values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>critical_values</strong> (<em>numpy.ndarray</em>) – An array of critical points.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pair of points with the smallest distance and their Euclidean distance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="waveletl1.covariance.html" class="btn btn-neutral float-left" title="waveletl1.covariance module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="waveletl1.filters.html" class="btn btn-neutral float-right" title="waveletl1.filters module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Vilasini Tinnaneri Sreekanth.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

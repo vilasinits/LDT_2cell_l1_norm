@@ -1,0 +1,273 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>waveletl1.takahashi_loader &mdash; wavelet l1-norm prediction tool 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            wavelet l1-norm prediction tool
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../waveletl1.html">waveletl1 package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wavelet l1-norm prediction tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">waveletl1.takahashi_loader</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for waveletl1.takahashi_loader</h1><div class="highlight"><pre>
+<span></span><span class="c1"># from imports import *</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">healpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">hp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">multiprocessing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mp</span>
+
+<div class="viewcode-block" id="TakahashiLoader">
+<a class="viewcode-back" href="../../waveletl1.takahashi_loader.html#waveletl1.takahashi_loader.TakahashiLoader">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TakahashiLoader</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_path</span><span class="o">=</span><span class="s2">&quot;/feynman/work/dap/lcs/vt272285/data/sim_data&quot;</span><span class="p">,</span>
+        <span class="n">takahashi_data_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_path</span> <span class="o">=</span> <span class="n">data_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">takahashi_data_path</span> <span class="o">=</span> <span class="n">takahashi_data_path</span> <span class="ow">or</span> <span class="n">data_path</span> <span class="o">+</span> <span class="s2">&quot;/Takahashi/&quot;</span>
+
+<div class="viewcode-block" id="TakahashiLoader.get_beam">
+<a class="viewcode-back" href="../../waveletl1.takahashi_loader.html#waveletl1.takahashi_loader.TakahashiLoader.get_beam">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_beam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">lmax</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">top_hat</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                <span class="nb">abs</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span> <span class="mi">0</span>
+            <span class="p">)</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">180</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">t</span> <span class="o">*</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+        <span class="n">bw</span> <span class="o">=</span> <span class="n">top_hat</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">beam</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">sphtfunc</span><span class="o">.</span><span class="n">beam2bl</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">lmax</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">beam</span></div>
+
+
+<div class="viewcode-block" id="TakahashiLoader.smooth_map">
+<a class="viewcode-back" href="../../waveletl1.takahashi_loader.html#waveletl1.takahashi_loader.TakahashiLoader.smooth_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">smooth_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">theta</span><span class="p">,</span> <span class="n">lmax_takahashi</span><span class="p">,</span> <span class="n">kappa_1024</span><span class="p">,</span> <span class="n">nside_takahashi</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="n">beam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_beam</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">lmax_takahashi</span><span class="p">)</span>
+        <span class="n">almkappa</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">sphtfunc</span><span class="o">.</span><span class="n">map2alm</span><span class="p">(</span><span class="n">kappa_1024</span><span class="p">)</span>
+        <span class="n">kappa_smooth</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">sphtfunc</span><span class="o">.</span><span class="n">alm2map</span><span class="p">(</span>
+            <span class="n">hp</span><span class="o">.</span><span class="n">sphtfunc</span><span class="o">.</span><span class="n">almxfl</span><span class="p">(</span><span class="n">almkappa</span><span class="p">,</span> <span class="n">beam</span><span class="p">),</span> <span class="n">nside_takahashi</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">kappa_smooth</span></div>
+
+
+<div class="viewcode-block" id="TakahashiLoader.load_takahashi_file">
+<a class="viewcode-back" href="../../waveletl1.takahashi_loader.html#waveletl1.takahashi_loader.TakahashiLoader.load_takahashi_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_takahashi_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">new_nside</span><span class="p">,</span> <span class="n">nprocess</span><span class="p">):</span>
+        <span class="n">skip</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="mi">0</span><span class="p">,</span>
+            <span class="mi">536870908</span><span class="p">,</span>
+            <span class="mi">1073741818</span><span class="p">,</span>
+            <span class="mi">1610612728</span><span class="p">,</span>
+            <span class="mi">2147483638</span><span class="p">,</span>
+            <span class="mi">2684354547</span><span class="p">,</span>
+            <span class="mi">3221225457</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="n">load_blocks</span> <span class="o">=</span> <span class="p">[</span><span class="n">skip</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">skip</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)]</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">rec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint32&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">nside</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int32&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">npix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int64&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">rec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint32&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;nside:</span><span class="si">{}</span><span class="s2"> npix:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">npix</span><span class="p">))</span>
+
+            <span class="n">rec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint32&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;file opened!&quot;</span><span class="p">)</span>
+            <span class="n">kappa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">npix</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">load_blocks</span><span class="p">):</span>
+                <span class="n">blocks</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+                <span class="n">load</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">blocks</span><span class="p">)</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint32&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">kappa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kappa</span><span class="p">,</span> <span class="n">load</span><span class="p">)</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">-</span> <span class="n">blocks</span>
+                <span class="k">if</span> <span class="n">r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="k">elif</span> <span class="n">r</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">load_blocks</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">load</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">r</span><span class="p">)</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint32&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                    <span class="n">kappa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kappa</span><span class="p">,</span> <span class="n">load</span><span class="p">)</span>
+            <span class="c1"># gamma1 = np.array([])</span>
+            <span class="c1"># r = npix</span>
+            <span class="c1"># print(&quot;loop1 done! &quot;)</span>
+            <span class="c1"># for i, l in enumerate(load_blocks):</span>
+            <span class="c1">#     blocks = min(l, r)</span>
+            <span class="c1">#     load = np.fromfile(f, dtype=&#39;float32&#39;, count=blocks)</span>
+            <span class="c1">#     np.fromfile(f, dtype=&#39;uint32&#39;, count=2)</span>
+            <span class="c1">#     gamma1 = np.append(gamma1, load)</span>
+            <span class="c1"># gamma2 = np.array([])</span>
+            <span class="c1"># r = npix</span>
+            <span class="c1"># for i, l in enumerate(load_blocks):</span>
+            <span class="c1">#     blocks = min(l, r)</span>
+            <span class="c1">#     load = np.fromfile(f, dtype=&#39;float32&#39;, count=blocks)</span>
+            <span class="c1">#     np.fromfile(f, dtype=&#39;uint32&#39;, count=2)</span>
+            <span class="c1">#     gamma2 = np.append(gamma2, load)</span>
+            <span class="c1">#     r = r-blocks</span>
+            <span class="c1">#     if r == 0:</span>
+            <span class="c1">#         break</span>
+            <span class="c1">#     elif r &gt; 0 and i == len(load_blocks)-1:</span>
+            <span class="c1">#         load = np.fromfile(f, dtype=&#39;float32&#39;, count=r)</span>
+            <span class="c1">#         np.fromfile(f, dtype=&#39;uint32&#39;, count=2)</span>
+            <span class="c1">#         gamma2 = np.append(gamma2, load)</span>
+            <span class="c1"># omega = np.array([])</span>
+            <span class="c1"># r = npix</span>
+            <span class="c1"># print(&quot;loop 3 done!&quot;)</span>
+            <span class="c1"># for i, l in enumerate(load_blocks):</span>
+            <span class="c1">#     blocks = min(l, r)</span>
+            <span class="c1">#     load = np.fromfile(f, dtype=&#39;float32&#39;, count=blocks)</span>
+            <span class="c1">#     np.fromfile(f, dtype=&#39;uint32&#39;, count=2)</span>
+            <span class="c1">#     omega = np.append(omega, load)</span>
+            <span class="c1">#     r = r-blocks</span>
+            <span class="c1">#     if r == 0:</span>
+            <span class="c1">#         break</span>
+            <span class="c1">#     elif r &gt; 0 and i == len(load_blocks)-1:</span>
+            <span class="c1">#         load = np.fromfile(f, dtype=&#39;float32&#39;, count=r)</span>
+            <span class="c1">#         np.fromfile(f, dtype=&#39;uint32&#39;, count=2)</span>
+            <span class="c1">#         omega = np.append(omega, load)</span>
+
+        <span class="n">nside_takahashi</span> <span class="o">=</span> <span class="n">new_nside</span>
+        <span class="n">lmax_takahashi</span> <span class="o">=</span> <span class="n">nside_takahashi</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="n">kappa_1024</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">pixelfunc</span><span class="o">.</span><span class="n">ud_grade</span><span class="p">(</span><span class="n">kappa</span><span class="p">,</span> <span class="n">nside_takahashi</span><span class="p">)</span>
+
+        <span class="c1"># Setting up arguments for parallel smoothing</span>
+        <span class="n">args1</span> <span class="o">=</span> <span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">lmax_takahashi</span><span class="p">,</span> <span class="n">kappa_1024</span><span class="p">,</span> <span class="n">nside_takahashi</span><span class="p">)</span>
+        <span class="n">args2</span> <span class="o">=</span> <span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">lmax_takahashi</span><span class="p">,</span> <span class="n">kappa_1024</span><span class="p">,</span> <span class="n">nside_takahashi</span><span class="p">)</span>
+
+        <span class="c1"># Parallel smoothing operation</span>
+        <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">nprocess</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+            <span class="n">kappa_smooth1</span><span class="p">,</span> <span class="n">kappa_smooth2</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smooth_map</span><span class="p">,</span> <span class="p">[</span><span class="n">args1</span><span class="p">,</span> <span class="n">args2</span><span class="p">])</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Smoothing operations done!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">kappa_smooth2</span> <span class="o">-</span> <span class="n">kappa_smooth1</span><span class="p">),</span> <span class="n">kappa_smooth1</span><span class="p">,</span> <span class="n">kappa_smooth2</span></div>
+
+
+<div class="viewcode-block" id="TakahashiLoader.run_loader">
+<a class="viewcode-back" href="../../waveletl1.takahashi_loader.html#waveletl1.takahashi_loader.TakahashiLoader.run_loader">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_loader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta1</span><span class="p">,</span> <span class="n">nside</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="n">nprocess</span><span class="p">):</span>
+        <span class="n">tk_fn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">38</span><span class="p">])</span>
+        <span class="n">tk_zs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="mf">0.0506</span><span class="p">,</span>
+                <span class="mf">0.5078</span><span class="p">,</span>
+                <span class="mf">1.0334</span><span class="p">,</span>
+                <span class="mf">1.2179</span><span class="p">,</span>
+                <span class="mf">1.4230</span><span class="p">,</span>
+                <span class="mf">1.6528</span><span class="p">,</span>
+                <span class="mf">1.9121</span><span class="p">,</span>
+                <span class="mf">2.0548</span><span class="p">,</span>
+                <span class="mf">2.3704</span><span class="p">,</span>
+                <span class="mf">3.9309</span><span class="p">,</span>
+                <span class="mf">5.3423</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="c1"># zs = tk_zs[2]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;the source redshift for which the file is being loaded is: &quot;</span><span class="p">,</span> <span class="n">zs</span><span class="p">)</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">zs</span> <span class="o">==</span> <span class="n">tk_zs</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">takahashi_file</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">takahashi_data_path</span>
+            <span class="o">+</span> <span class="s2">&quot;allskymap_nres12r000.zs&quot;</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tk_fn</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+            <span class="o">+</span> <span class="s2">&quot;.mag.dat&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;the takahashi file being loaded is: &quot;</span><span class="p">,</span> <span class="n">takahashi_file</span><span class="p">)</span>
+        <span class="n">var</span><span class="p">,</span> <span class="n">kmap1</span><span class="p">,</span> <span class="n">kmap2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_takahashi_file</span><span class="p">(</span>
+            <span class="n">takahashi_file</span><span class="p">,</span> <span class="n">theta1</span><span class="p">,</span> <span class="n">nside</span><span class="p">,</span> <span class="n">nprocess</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The redshift is:&quot;</span><span class="p">,</span> <span class="n">zs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The theta is:&quot;</span><span class="p">,</span> <span class="n">theta1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variance:&quot;</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">var</span><span class="p">,</span> <span class="n">kmap1</span><span class="p">,</span> <span class="n">kmap2</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Vilasini Tinnaneri Sreekanth.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
