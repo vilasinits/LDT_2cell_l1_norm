@@ -2,65 +2,55 @@ import os
 import sys
 
 sys.path.append("/feynman/work/dap/lcs/vt272285/final_codes/LDT_2cell_l1_norm")
-# Standard Libraries
-import numpy as np
-from numpy import newaxis
-import matplotlib.pyplot as plt
-from scipy.optimize import root
-from scipy.interpolate import CubicSpline, UnivariateSpline, interp1d
 import logging  # Good practice for messages/debugging
-
-
-from scipy.optimize import root
-from scipy.integrate import simps, quad, trapezoid
-import scipy.special as sp
-import scipy
-import pyccl as ccl
-
-import mpmath as mp
-from scipy.optimize import newton
-
-import healpy as hp
+import unittest
+from functools import lru_cache
 
 # import multiprocessing as mp
 import astropy.units as u
-
-import unittest
-from scipy.stats import qmc
-import pandas as pd
-from functools import lru_cache
-
-
+import healpy as hp
 import jax
 import jax.numpy as jnp
+import matplotlib.pyplot as plt
+import mpmath as mp
+# Standard Libraries
+import numpy as np
+import pandas as pd
+import pyccl as ccl
+import scipy
+import scipy.special as sp
 from jax.numpy.fft import rfft2
+from numpy import newaxis
+from scipy.integrate import quad, simps, trapezoid
+from scipy.interpolate import CubicSpline, UnivariateSpline, interp1d
+from scipy.optimize import newton, root
+from scipy.stats import qmc
 
 try:
     # --- halo‑model pieces ---
     from pyccl.halos import MassDef200m
-    from pyccl.halos.massdef import MassDef200m
-    from pyccl.halos.hmfunc.tinker10 import MassFuncTinker10
-    from pyccl.halos.hbias.tinker10 import HaloBiasTinker10
     from pyccl.halos.concentration.duffy08 import ConcentrationDuffy08
-    from pyccl.halos.profiles.nfw import HaloProfileNFW
     from pyccl.halos.halo_model import HMCalculator
-    from pyccl.halos.pk_4pt import halomod_Tk3D_cNG  # full (1h+2h+3h+4h) trispectrum
+    from pyccl.halos.hbias.tinker10 import HaloBiasTinker10
+    from pyccl.halos.hmfunc.tinker10 import MassFuncTinker10
+    from pyccl.halos.massdef import MassDef200m
+    from pyccl.halos.pk_4pt import \
+        halomod_Tk3D_cNG  # full (1h+2h+3h+4h) trispectrum
+    from pyccl.halos.profiles.nfw import HaloProfileNFW
 
-    from modules.cosmology_module import *
-    from modules.filters import *
-
-    from modules.calculations_module import *
     from modules.calculations_from_simulations import *
-    from modules.covariance import *
-    from modules.variance_module import *
-    from modules.variables_module import *
-    from modules.ratefunction_module import *
-    from modules.takahashi_loader import *
-
+    from modules.calculations_module import *
     # from modules.test_cosmology import *
     from modules.computePDF_module import *
+    from modules.cosmology_module import *
+    from modules.covariance import *
     from modules.criticalpoints_module import *
+    from modules.filters import *
     from modules.ldt2celll1norm import *
+    from modules.ratefunction_module import *
+    from modules.takahashi_loader import *
+    from modules.variables_module import *
+    from modules.variance_module import *
 
 except ImportError as e:
     logging.error(f"Failed to import one or more project modules: {e}")

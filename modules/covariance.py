@@ -118,7 +118,7 @@ def compute_total_covariance(
     # 1. Gaussian
     delta_k = np.gradient(k)
     Nk = (volume * (k ** 2) * delta_k) / (2 * (np.pi ** 2))
-    sigma2 = (2 / Nk) + (0.2 ** 2)
+    sigma2 = (2 / Nk) + (0.5 ** 2)
     cov_gauss = np.diag(sigma2 * pk_mean ** 2)
 
     # 2. Non-Gaussian
@@ -157,6 +157,6 @@ def compute_total_covariance(
     ) / (volume ** 2)
 
     # Total covariance
-    cov_total = cov_gauss + 0.5 * cov_ng + (1.0 * cov_ssc)
+    cov_total = cov_gauss  # + 1.0 * cov_ng + (1.0 * cov_ssc)
 
     return cov_total
