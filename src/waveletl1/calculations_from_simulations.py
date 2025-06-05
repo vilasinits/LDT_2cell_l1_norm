@@ -1,23 +1,23 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import CubicSpline
-from .filters import get_W2D_FL 
+from .filters import get_W2D_FL
 from .utils import get_l1_from_pdf
 from .powspec import calculate_Cls
+
 
 def get_smoothed_app_pdf(mass_map, window_radius, binedges, filter_type, **kwargs):
     """
     Applies top-hat smoothing in Fourier space at two scales and returns the PDF of the difference map.
-    
+
     The map is filtered with a top-hat window of radius R and 2R, then the difference is computed.
-    
+
     Parameters:
         mass_map     : 2D numpy array.
         window_radius: The smoothing scale (R) in physical units.
         binedges     : Bin edges for the histogram.
         L            : Physical size of the map (default 505 MPC/h).
-    
+
     Returns:
         tuple : (bin_edges, pdf_counts, difference_map)
     """
@@ -162,8 +162,3 @@ def get_simulation_l1(
         ell_bins,
         np.array(cls_runs),
     )
-
-
-
-
-

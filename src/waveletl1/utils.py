@@ -1,5 +1,5 @@
-
 import numpy as np
+
 
 def apply_pixel_window(ells, theta_deg=10.0, npix=1200):
     """
@@ -23,9 +23,11 @@ def apply_pixel_window(ells, theta_deg=10.0, npix=1200):
     W_ell = np.sinc(arg / np.pi) ** 2
 
     return W_ell
-        
+
+
 def fourier_coordinate(x, y, map_size):
     return (((map_size // 2) + 1) * x) + y
+
 
 def get_moments(kappa_values, pdf_values):
     """
@@ -50,9 +52,10 @@ def get_moments(kappa_values, pdf_values):
     fourth_moment = np.trapz(
         (kappa_values - mean_kappa) ** 4 * normalized_pdf_values, kappa_values
     )
-    S_3 = third_moment / variance ** 2.0
-    K = fourth_moment / variance ** 2 - 3
+    S_3 = third_moment / variance**2.0
+    K = fourth_moment / variance**2 - 3
     return mean_kappa, variance, S_3, K, norm
+
 
 def get_l1_from_pdf(counts, bins):
     """

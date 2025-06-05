@@ -3,6 +3,7 @@ import healpy as hp
 import numpy as np
 import multiprocessing as mp
 
+
 class TakahashiLoader:
     def __init__(
         self,

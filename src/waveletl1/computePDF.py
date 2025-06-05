@@ -6,7 +6,7 @@ from .ratefunction import get_scaled_cgf
 
 
 class computePDF:
-    """ 
+    """
     A class to compute the Probability Distribution Function (PDF) for kappa using various
     cosmological and variance parameters contained within an instance of VariablesGenerator.
     """
@@ -74,7 +74,7 @@ class computePDF:
             initial_guess = np.sqrt(1j * (10 ** (-12))) if n == 0 else taus[n - 1]
             taus[n] = newton(vectorized_equation, x0=initial_guess, args=(lambda_,))
 
-        phi_values = lambda_new * p(taus) - ((taus ** 2) / 2.0)
+        phi_values = lambda_new * p(taus) - ((taus**2) / 2.0)
         return lambda_new, phi_values
 
     def compute_pdf_for_kappa(self, kappa, lambda_new, phi_values):

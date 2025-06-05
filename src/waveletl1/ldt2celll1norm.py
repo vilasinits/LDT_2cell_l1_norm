@@ -4,6 +4,7 @@ from .variance import Variance
 from .variables import VariablesGenerator
 from .criticalpoints import CriticalPointsFinder
 
+
 def setup_cosmology_and_variance(
     cosmology_params,
     zs_source,

@@ -4,32 +4,37 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import CubicSpline, UnivariateSpline
 from scipy.optimize import root
-from .ratefunction import get_psi_2cell, get_psi_derivative_delta1, get_psi_derivative_delta2
- 
+from .ratefunction import (
+    get_psi_2cell,
+    get_psi_derivative_delta1,
+    get_psi_derivative_delta2,
+)
+
+
 class CriticalPointsFinder:
     r"""
-    A class designed to identify critical points where the rate function's convexity changes in a cosmological context. 
-    This is achieved through analyzing the Hessian matrix of the rate function across a grid of values, 
+    A class designed to identify critical points where the rate function's convexity changes in a cosmological context.
+    This is achieved through analyzing the Hessian matrix of the rate function across a grid of values,
     identifying zero crossings in its determinant to locate changes in convexity.
 
-    The rate function :math:`I(x)` characterizes the exponential decay rate of the probabilities of certain outcomes 
-    as the system size increases. The rate function is required to be convex, which ensures that the study of rare 
+    The rate function :math:`I(x)` characterizes the exponential decay rate of the probabilities of certain outcomes
+    as the system size increases. The rate function is required to be convex, which ensures that the study of rare
     events through large deviation principles can be approached effectively through minimization techniques.
 
-    **Cumulant Generating Function and Legendre-Fenchel Transform**  
-    The CGF, denoted by :math:`\Lambda(\theta)`, is foundational for deriving the rate function through the Legendre-Fenchel transform. 
+    **Cumulant Generating Function and Legendre-Fenchel Transform**
+    The CGF, denoted by :math:`\Lambda(\theta)`, is foundational for deriving the rate function through the Legendre-Fenchel transform.
     This transform connects the CGF and the rate function as follows:
 
     .. math::
 
         I(x) = \sup_{\theta} \{ \theta x - \Lambda(\theta) \}
 
-    This equation ensures that the rate function :math:`I(x)` is convex, inheriting this property from the convex CGF :math:`\Lambda(\theta)`. 
-    The supremum operation over :math:`\theta` highlights that :math:`I(x)` represents the tightest upper bound 
+    This equation ensures that the rate function :math:`I(x)` is convex, inheriting this property from the convex CGF :math:`\Lambda(\theta)`.
+    The supremum operation over :math:`\theta` highlights that :math:`I(x)` represents the tightest upper bound
     of the linear functions defined by :math:`\theta x - \Lambda(\theta)`.
 
-    **Convexity of the Rate Function**  
-    The convexity of the rate function :math:`I(x)` implies the following inequality for any two points :math:`x_1` and :math:`x_2` 
+    **Convexity of the Rate Function**
+    The convexity of the rate function :math:`I(x)` implies the following inequality for any two points :math:`x_1` and :math:`x_2`
     in its domain and any :math:`\lambda \in [0, 1]`:
 
     .. math::
@@ -38,14 +43,13 @@ class CriticalPointsFinder:
 
     This inequality defines the convexity of the rate function, critical for analyzing rare events in large deviation theory.
 
-    In this method, we use the determinant of the Hessian of the rate function to locate points where it vanishes. 
+    In this method, we use the determinant of the Hessian of the rate function to locate points where it vanishes.
     These points help identify the values of :math:`\lambda` used in our subsequent calculations.
     """
 
-
     def __init__(self, variables, ngrid=50, plot=False):
         """
-        Initializes the CriticalPointsFinder with cosmology and variance objects, 
+        Initializes the CriticalPointsFinder with cosmology and variance objects,
         and optionally configures plotting.
 
         Parameters:
@@ -236,9 +240,9 @@ class CriticalPointsFinder:
         self, z, deld=1e-4, initial_guesses=[(-0.05, -0.05), (0.0, 0.0)]
     ):
         """
-        Finds critical points of the 2D rate function by solving for 
+        Finds critical points of the 2D rate function by solving for
         dI/d(delta1) = 0 and dI/d(delta2) = 0 via 2D root-finding.
-        
+
         Parameters
         ----------
         variance, chi_value, recal_value, z, theta1, theta2 : float
@@ -247,7 +251,7 @@ class CriticalPointsFinder:
             Small increment used in your finite-difference derivative functions.
         initial_guesses : list of (float, float)
             A list of (delta1, delta2) starting guesses for the solver.
-        
+
         -------
         solutions : list
             A list of distinct solutions (delta1, delta2) to the stationarity conditions.
@@ -274,6 +278,7 @@ class CriticalPointsFinder:
                 if not any(np.allclose(candidate, s) for s in solutions):
                     solutions.append(candidate)
         return solutions
+
 
 def find_smallest_pair(critical_values):
     """

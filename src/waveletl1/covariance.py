@@ -10,6 +10,7 @@ from pyccl.halos.massdef import MassDef200m
 from pyccl.halos.pk_4pt import halomod_Tk3D_cNG  # full (1h+2h+3h+4h) trispectrum
 from pyccl.halos.profiles.nfw import HaloProfileNFW
 
+
 def compute_pk_with_cv(
     cosmo, z_values, z_values_all, nz_values, delta_A0=0.05, variability=True
 ):
@@ -24,7 +25,7 @@ def compute_pk_with_cv(
         chi = cosmo.get_chi(z_values)
         H = cosmo.getH(z_values)
         # Volume element weighted by n(z)
-        dV_dz = sky_area_sr * nz_values * chi ** 2 * cosmo.speed_light / H
+        dV_dz = sky_area_sr * nz_values * chi**2 * cosmo.speed_light / H
         V_eff = np.abs(np.trapz(dV_dz, nz_values))  # / (cosmo.h**3))
         print(f"Effective volume = {V_eff:.2e} (Mpc/h)^3")
         # Number of realizations
@@ -126,9 +127,9 @@ def compute_total_covariance(
     """
     # 1. Gaussian
     delta_k = np.gradient(k)
-    Nk = (volume * (k ** 2) * delta_k) / (2 * (np.pi ** 2))
-    sigma2 = (2 / Nk) + (0.5 ** 2)
-    cov_gauss = np.diag(sigma2 * pk_mean ** 2)
+    Nk = (volume * (k**2) * delta_k) / (2 * (np.pi**2))
+    sigma2 = (2 / Nk) + (0.5**2)
+    cov_gauss = np.diag(sigma2 * pk_mean**2)
 
     # 2. Non-Gaussian
     Tmat = tk3d(k, a)
@@ -155,17 +156,17 @@ def compute_total_covariance(
             / ((k_window * R_survey) ** 3)
         )
         pk_window = np.interp(k_window, k, pk_mean)
-        integrand = (k_window ** 2) * pk_window * (W ** 2)
-        sigma_b_squared = np.trapz(integrand, k_window) / (2 * (np.pi ** 2))
+        integrand = (k_window**2) * pk_window * (W**2)
+        sigma_b_squared = np.trapz(integrand, k_window) / (2 * (np.pi**2))
 
     cov_ssc = (
         np.outer(response, response)
         * pk_mean[:, None]
         * pk_mean[None, :]
         * sigma_b_squared
-    ) / (volume ** 2)
+    ) / (volume**2)
 
     # Total covariance
-    cov_total = cov_gauss   + (1.0 * cov_ssc) +  .8 * cov_ng 
+    cov_total = cov_gauss + (1.0 * cov_ssc) + 0.8 * cov_ng
 
     return cov_total

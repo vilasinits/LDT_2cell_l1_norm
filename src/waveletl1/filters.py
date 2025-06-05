@@ -1,5 +1,6 @@
 # from imports import *
 import numpy as np
+
 # import scipy.special
 from scipy import special as sp
 from functools import lru_cache
@@ -9,32 +10,33 @@ import mpmath as mp
 def top_hat_filter(k, R):
     """
     Calculates the top-hat window function for a given radius.
-    
+
     Parameters:
         R (float or numpy.ndarray): The scale (or array of scales) at which to calculate the window function.
-        
+
     Returns:
         numpy.ndarray: The top-hat window function values at the given scale(s).
     """
     return 2.0 * sp.j1(k * R) / (k * R)
 
+
 def top_hat_window(R):
-        """
-        Calculates the top-hat window function for a given radius.
-        
-        Parameters:
-            R (float or numpy.ndarray): The scale (or array of scales) at which to calculate the window function.
-            
-        Returns:
-            numpy.ndarray: The top-hat window function values at the given scale(s).
-        """
-        return 2.0 * sp.j1(R) / R
-    
+    """
+    Calculates the top-hat window function for a given radius.
+
+    Parameters:
+        R (float or numpy.ndarray): The scale (or array of scales) at which to calculate the window function.
+
+    Returns:
+        numpy.ndarray: The top-hat window function values at the given scale(s).
+    """
+    return 2.0 * sp.j1(R) / R
+
 
 def get_W2D_FL(window_radius, map_shape, filter_type, L=505):
     """
     Constructs a 2D Fourier-space window function for a top-hat filter.
-    
+
     Parameters:
         window_radius : float
             The top-hat window radius in physical units (must be consistent with L).
@@ -42,7 +44,7 @@ def get_W2D_FL(window_radius, map_shape, filter_type, L=505):
             Shape of the map (assumed square, e.g. (600,600)).
         L             : float, optional
             Physical size of the map (default is 505, as used for SLICS).
-    
+
     Returns:
         2D numpy array representing the Fourier-space window.
     """
@@ -52,7 +54,7 @@ def get_W2D_FL(window_radius, map_shape, filter_type, L=505):
     kx = np.fft.fftshift(np.fft.fftfreq(N, dx))
     ky = np.fft.fftshift(np.fft.fftfreq(N, dx))
     kx, ky = np.meshgrid(kx, ky, indexing="ij")
-    k2 = kx ** 2 + ky ** 2
+    k2 = kx**2 + ky**2
     # Convert to radial wavenumber (with 2pi factor).
     k = 2 * np.pi * np.sqrt(k2)
     # Avoid division by zero at the center.
@@ -77,9 +79,9 @@ def S_scalar(n: int, b: float) -> float:
     if n == 0:
         return b * J1
     elif n == -1:
-        return b * float(mp.hyp1f2(0.5, 1, 1.5, -(b ** 2) / 4))
+        return b * float(mp.hyp1f2(0.5, 1, 1.5, -(b**2) / 4))
     else:
-        return b ** (n + 1) * J1 + n * b ** n * J0 - n ** 2 * S_scalar(n - 2, b)
+        return b ** (n + 1) * J1 + n * b**n * J0 - n**2 * S_scalar(n - 2, b)
 
 
 # Wrapper to handle arrays
@@ -130,31 +132,26 @@ def uHat_starlet_analytical(eta, R):
 
     # Compute factors
     factor1 = (
-        0.125 * eta_safe ** 3 * S0_half
-        - 0.75 * eta_safe ** 2 * S1_half
+        0.125 * eta_safe**3 * S0_half
+        - 0.75 * eta_safe**2 * S1_half
         + 1.5 * eta_safe * S2_half
         - S3_half
     )
     # print("done factor1")
     factor2 = (
-        eta_safe ** 3 * S0_one
-        - 3 * eta_safe ** 2 * S1_one
-        + 3 * eta_safe * S2_one
-        - S3_one
+        eta_safe**3 * S0_one - 3 * eta_safe**2 * S1_one + 3 * eta_safe * S2_one - S3_one
     )
     # print("done factor2")
     factor3 = (
-        8 * eta_safe ** 3 * S0_two
-        - 12 * eta_safe ** 2 * S1_two
+        8 * eta_safe**3 * S0_two
+        - 12 * eta_safe**2 * S1_two
         + 6 * eta_safe * S2_two
         - S3_two
     )
     # print("done factor3")
     # Final result
     result = (
-        (2 * np.pi)
-        * (-128 / 9 * factor1 + 4 * factor2 - 1 / 9 * factor3)
-        / eta_safe ** 5
+        (2 * np.pi) * (-128 / 9 * factor1 + 4 * factor2 - 1 / 9 * factor3) / eta_safe**5
     )
 
     return result

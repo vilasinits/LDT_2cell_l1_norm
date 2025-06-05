@@ -191,9 +191,7 @@ def get_psi_2nd_derivative_delta1(
         variance, chi, recal, z, delta1, delta2, theta1, theta2
     )
 
-    second_derivative = (psi_plus_h - (2.0 * psi_at_delta1) + psi_minus_h) / (
-        delh ** 2.0
-    )
+    second_derivative = (psi_plus_h - (2.0 * psi_at_delta1) + psi_minus_h) / (delh**2.0)
     return second_derivative
 
 
@@ -214,9 +212,7 @@ def get_psi_2nd_derivative_delta2(
         variance, chi, recal, z, delta1, delta2, theta1, theta2
     )
 
-    second_derivative = (psi_plus_h - (2.0 * psi_at_delta2) + psi_minus_h) / (
-        delh ** 2.0
-    )
+    second_derivative = (psi_plus_h - (2.0 * psi_at_delta2) + psi_minus_h) / (delh**2.0)
     return second_derivative
 
 
@@ -261,5 +257,5 @@ def psi_derivative_determinant(
         deld, variance, chi, recal, z, delta1, delta2, theta1, theta2
     )
 
-    result = (psi_11 * psi_22) - (psi_12 ** 2.0)
+    result = (psi_11 * psi_22) - (psi_12**2.0)
     return result

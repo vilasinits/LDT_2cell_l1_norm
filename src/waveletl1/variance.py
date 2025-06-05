@@ -1,20 +1,21 @@
 import numpy as np
 import scipy.integrate as simps
 import pyccl as ccl
-from .filters import top_hat_window, uHat_starlet_analytical 
+from .filters import top_hat_window, uHat_starlet_analytical
 from .covariance import compute_pk_with_cv
 from .utils import apply_pixel_window
+
 
 class Variance:
     """
     A class to compute linear and nonlinear variance using power spectrum interpolators and a specific cosmological model.
-    
+
     Attributes:
         cosmo (Cosmology): An instance of a cosmology class providing necessary cosmological functions and parameters.
         PK_interpolator_linear (Interpolator): An interpolator instance for linear power spectrum calculations.
         PK_interpolator_nonlinear (Interpolator): An interpolator instance for nonlinear power spectrum calculations.
         model (str): The name of the cosmological model to be used for variance calculations.
-        
+
     """
 
     def __init__(
@@ -29,7 +30,7 @@ class Variance:
         """
         Initializes the Variance class with cosmology and parameters for P(k) calculation.
         Calculates the non-linear power spectrum, including cosmic variance noise if volume is specified.
-        
+
         Parameters:
             cosmo (Cosmology_function): An instance of the cosmology class.
             z_values (array-like): Redshifts for lensing planes/primary calculations.
@@ -78,28 +79,26 @@ class Variance:
             extrap_order_hik=1,
         )
 
-
         w = apply_pixel_window(self.ell, theta_deg=10.0, npix=1200)
         self.cls = (
             ccl.angular_cl(
                 self.cosmo.cosmoccl, tracer, tracer, self.ell, p_of_k_a=pk2d_
             )
-            * (w ** 2)
-            * self.cosmo.h ** 1
+            * (w**2)
+            * self.cosmo.h**1
         )
 
         print("Variance module initialized...")
 
-
     def linear_sigma2(self, redshift, R1, R2=None):
         """
         Calculates the linear variance σ² for given scales and redshift, considering the specified model adjustments.
-        
+
         Parameters:
             redshift (float): The redshift at which to evaluate the variance.
             R1 (float): The first scale radius.
             R2 (float, optional): The second scale radius. Defaults to R1 if not specified.
-            
+
         Returns:
             float: The linear variance σ² at the given scales and redshift.
         """
@@ -113,7 +112,7 @@ class Variance:
             ccl.linear_matter_power(
                 self.cosmo.cosmoccl, self.cosmo.k_values, 1 / (1 + redshift)
             )
-            * self.cosmo.h ** 3
+            * self.cosmo.h**3
         )
         if self.filter_type == "tophat":
             w1_2D = top_hat_window(self.cosmo.k_values * R1)
@@ -130,12 +129,12 @@ class Variance:
     def nonlinear_sigma2(self, redshift, R1, R2=None):
         """
         Calculates the nonlinear variance σ² for given scales and redshift, considering the specified model adjustments.
-        
+
         Parameters:
             redshift (float): The redshift at which to evaluate the variance.
             R1 (float): The first scale radius.
             R2 (float, optional): The second scale radius. Defaults to R1 if not specified.
-            
+
         Returns:
             float: The nonlinear variance σ² at the given scales and redshift.
         """
@@ -161,12 +160,12 @@ class Variance:
     def get_sig_slice(self, z, R1, R2):
         """
         Calculates the slice variance σ² for the given scales and redshift in the nonlinear regime.
-        
+
         Parameters:
             z (float): The redshift at which to evaluate the slice variance.
             R1 (float): The first scale radius.
             R2 (float): The second scale radius.
-            
+
         Returns:
             float: The slice variance σ² at the given scales and redshift.
         """

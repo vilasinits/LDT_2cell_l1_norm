@@ -3,6 +3,7 @@ import jax.numpy as jnp
 from jax.numpy.fft import rfft2
 from .utils import fourier_coordinate
 
+
 def calculate_Cls(map, angle, ell_min, ell_max, n_bins):
     """
     map: the image from which the angular power spectra (Cls) has to be calculated
@@ -31,7 +32,7 @@ def calculate_Cls(map, angle, ell_min, ell_max, n_bins):
         i, power_l, hits = val
         lx = jnp.minimum(i, map.shape[1] - i) * lpix
         ly = j * lpix
-        l = jnp.sqrt(lx ** 2.0 + ly ** 2.0)
+        l = jnp.sqrt(lx**2.0 + ly**2.0)
         pixid = fourier_coordinate(i, j, map.shape[0])
         bin_idx = jnp.digitize(l, ell_edges)  # - 1
         power_l = power_l.at[bin_idx].add(jnp.abs(map_ft[pixid] ** 2.0))

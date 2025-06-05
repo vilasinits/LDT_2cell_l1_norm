@@ -2,6 +2,7 @@
 import numpy as np
 from astropy import units as u
 
+
 class VariablesGenerator:
     """
     Stores configuration and calculates the final map variance (sigmasq_map).
@@ -21,7 +22,7 @@ class VariablesGenerator:
         lensing_weight (np.ndarray): Lensing weights at each plane.
         sigmasq_map (float): The calculated mass map variance.
         recal_value (float): Recalibration value.
-    
+
     Methods:
         __init__(self, cosmo, variance, zs, volume, theta1, nz_file, nplanes, chis, dchis, z_array, lensing_weight):
             Initializes the VariablesGenerator with injected objects and configuration.
@@ -76,7 +77,7 @@ class VariablesGenerator:
         self.lensing_weight = lensing_weight
         self.lambdas = np.linspace(-100, 100, 30)
         # Calculate sigmasq_map directly here
-        lensing_weight_squared = self.lensing_weight ** 2.0
+        lensing_weight_squared = self.lensing_weight**2.0
         print("Calculating sigmasq_map...")
         print("the shapes are: ", self.dchis.shape, lensing_weight_squared.shape)
         self.sigmasq_map = np.sum(

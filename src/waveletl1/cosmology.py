@@ -6,13 +6,13 @@ import pyccl as ccl
 
 class Cosmology_function:
     """
-        Initializes the cosmology based on the parameters
-        H0 = hubble constant in km/s/Mpc
-        Ob = Omega baryon
-        Oc = Omega cdm
-        Omnu = Omega massive neutrinos
-        Om = Omega matter = Ob + Oc + Omnu
-        Ol = Omega lambda 
+    Initializes the cosmology based on the parameters
+    H0 = hubble constant in km/s/Mpc
+    Ob = Omega baryon
+    Oc = Omega cdm
+    Omnu = Omega massive neutrinos
+    Om = Omega matter = Ob + Oc + Omnu
+    Ol = Omega lambda
 
     """
 
@@ -100,7 +100,7 @@ class Cosmology_function:
         return (
             1.5
             * self.Om
-            * (self.speed_light ** -2.0)
+            * (self.speed_light**-2.0)
             * ((self.H0) ** 2.0)
             * chi
             * (1 - (chi / chi_source))
