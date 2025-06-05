@@ -63,7 +63,7 @@ class Variance:
         tracer = ccl.WeakLensingTracer(
             self.cosmo.cosmoccl, dndz=(cosmo.z_nz, cosmo.n_nz)
         )
-        ell_edges = np.linspace(10, 1e3, 101)
+        ell_edges = np.linspace(10, 1e3, 51)
 
         self.ell = 0.5 * (ell_edges[1:] + ell_edges[:-1])
         # Create Pk2D for the mean

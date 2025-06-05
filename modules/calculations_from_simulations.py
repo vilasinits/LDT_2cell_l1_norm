@@ -112,7 +112,7 @@ def get_simulation_l1(
             )  # Store interpolated PDF counts for this run
             sim_sigmasq_runs[i - 1] = map_stdev  # Store variance for this run
 
-            _, ell_bins, cls_values = calculate_Cls_(mass_map_data, 10, 10, 1e3, 100)
+            _, ell_bins, cls_values = calculate_Cls_(mass_map_data, 10, 10, 1e3, 50)
             print("the ell_bins shape: ", ell_bins.shape, "and :", ell_bins[0])
             cls_runs.append(cls_values)
         except FileNotFoundError:

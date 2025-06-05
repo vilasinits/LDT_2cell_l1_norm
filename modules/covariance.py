@@ -157,6 +157,6 @@ def compute_total_covariance(
     ) / (volume ** 2)
 
     # Total covariance
-    cov_total = cov_gauss  # + 1.0 * cov_ng + (1.0 * cov_ssc)
+    cov_total = cov_gauss   + (1.0 * cov_ssc) #+  1.0 * cov_ng 
 
     return cov_total
