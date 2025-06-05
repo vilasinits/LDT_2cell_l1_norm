@@ -44,7 +44,7 @@ class Cosmology_function:
         self.cosmoccl = self._set_params()
         self.kmin = kmin
         self.kmax = kmax
-        self.nk = 50
+        self.nk = 100
         self.k_values = np.logspace(self.kmin, self.kmax, self.nk)
 
         self.nz_file = nz_file
