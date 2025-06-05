@@ -1,5 +1,6 @@
 from imports import *
 
+
 class VariablesGenerator:
     """
     Stores configuration and calculates the final map variance (sigmasq_map).
@@ -25,7 +26,19 @@ class VariablesGenerator:
             Initializes the VariablesGenerator with injected objects and configuration.
     """
 
-    def __init__(self, cosmo, variance, zs,  theta1, nz_file, nplanes, chis, dchis, z_array, lensing_weight):
+    def __init__(
+        self,
+        cosmo,
+        variance,
+        zs,
+        theta1,
+        nz_file,
+        nplanes,
+        chis,
+        dchis,
+        z_array,
+        lensing_weight,
+    ):
         """
         Initializes the VariablesGenerator with injected objects and pre-calculated plane info.
         Calculates sigmasq_map.
@@ -47,8 +60,12 @@ class VariablesGenerator:
         self.variance = variance
         self.zs = zs
         # self.volume = volume
-        self.theta1_radian = (theta1 * u.arcmin).to(u.radian).value  # Convert theta1 from arcmin to radians
-        self.theta2_radian = 2. * self.theta1_radian  # Double the angular scale for theta2
+        self.theta1_radian = (
+            (theta1 * u.arcmin).to(u.radian).value
+        )  # Convert theta1 from arcmin to radians
+        self.theta2_radian = (
+            2.0 * self.theta1_radian
+        )  # Double the angular scale for theta2
         self.nz_file = nz_file
         self.nplanes = nplanes
         self.chi_source = self.cosmo.get_chi(self.zs)
@@ -58,19 +75,26 @@ class VariablesGenerator:
         self.lensing_weight = lensing_weight
         self.lambdas = np.linspace(-100, 100, 30)
         # Calculate sigmasq_map directly here
-        lensing_weight_squared = self.lensing_weight ** 2.
+        lensing_weight_squared = self.lensing_weight ** 2.0
         print("Calculating sigmasq_map...")
         print("the shapes are: ", self.dchis.shape, lensing_weight_squared.shape)
-        self.sigmasq_map = np.sum(self.dchis * lensing_weight_squared * np.array([
-            self.variance.get_sig_slice(z, chi * self.theta1_radian, chi * self.theta2_radian)
-            for z, chi in zip(self.z_array, self.chis)
-        ]))
-        self.recal_value = 1.  
-
+        self.sigmasq_map = np.sum(
+            self.dchis
+            * lensing_weight_squared
+            * np.array(
+                [
+                    self.variance.get_sig_slice(
+                        z, chi * self.theta1_radian, chi * self.theta2_radian
+                    )
+                    for z, chi in zip(self.z_array, self.chis)
+                ]
+            )
+        )
+        self.recal_value = 1.0
+        self.crit_point_z = variance.crit_point_z
         print("VariablesGenerator Initialized:")
         print(f"  Source Redshift (zs): {self.zs}")
         print(f"  Angular Scale (theta1): {theta1} arcmin")
         print(f"  Number of Planes: {self.nplanes}")
         print(f"  Using n(z) file: {self.nz_file is not None}")
         print(f"  Calculated Map Variance (sigmasq_map): {self.sigmasq_map}")
-
