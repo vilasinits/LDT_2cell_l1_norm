@@ -7,6 +7,8 @@ This tool supports the analysis presented in the paper:
 *Theoretical wavelet ℓ₁-norm from one-point probability density function prediction*, A&A 678, A116 (2024).  
 A&A Article: https://www.aanda.org/articles/aa/full_html/2024/11/aa50061-24/aa50061-24.html
 
+📦 GitHub Repository: https://github.com/vilasinits/LDT_2cell_l1_norm/tree/refactor-pyccl-version
+
 Development Status
 ------------------
 
