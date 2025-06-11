@@ -1,5 +1,5 @@
 import numpy as np
-import scipy.integrate as simps
+from scipy.integrate import simps
 import pyccl as ccl
 from .filters import top_hat_window, uHat_starlet_analytical
 from .covariance import compute_pk_with_cv
@@ -119,7 +119,7 @@ class Variance:
             w2_2D = top_hat_window(self.cosmo.k_values * R2)
             w2 = w1_2D * w2_2D
         elif self.filter_type == "starlet":
-            w1_2D = uHat_starlet_analytical(self.cosmo.k_values * R1)
+            w1_2D = uHat_starlet_analytical(self.cosmo.k_values , R1)
             w2_2D = w1_2D  # self.uHat_starlet_analytical(self.cosmo.k_values * R2)
             w2 = -w1_2D * w2_2D
         constant = 1.0 / 2.0 / np.pi
@@ -150,7 +150,7 @@ class Variance:
             w2_2D = top_hat_window(k * R2)
             w2 = w1_2D * w2_2D
         elif self.filter_type == "starlet":
-            w1_2D = uHat_starlet_analytical(k * R1)
+            w1_2D = uHat_starlet_analytical(k , R1)
             w2_2D = w1_2D  # self.uHat_starlet_analytical(k * R2)
             w2 = w1_2D * w2_2D
         constant = 1.0 / 2.0 / np.pi

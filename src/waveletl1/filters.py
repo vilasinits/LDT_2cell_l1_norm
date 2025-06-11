@@ -105,7 +105,7 @@ def uHat_starlet_analytical(eta, R):
     Returns:
         float or np.ndarray: Computed \( \hat{u} \).
     """
-    print("Calculating uHat_starlet_analytical (optimized version)")
+    # print("Calculating uHat_starlet_analytical (optimized version)")
 
     eta = np.asarray(eta) * R
     eta_safe = np.clip(eta, 2e-2, 100)  # Stability for small eta

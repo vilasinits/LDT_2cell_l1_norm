@@ -1,7 +1,7 @@
 import numpy as np
 from .cosmology import Cosmology_function
-from .variance import Variance
-from .variables import VariablesGenerator
+from .variance_module import Variance
+from .variables_module import VariablesGenerator
 from .criticalpoints import CriticalPointsFinder
 
 
@@ -89,7 +89,7 @@ def setup_cosmology_and_variance(
 
     # 4. Variance
     print("Initializing Variance and P(k)...")
-    variance = Variance(
+    variance_ = Variance(
         cosmo=cosmo,
         z_values=z_array,
         z_values_critical=crit_point_z,
@@ -102,7 +102,7 @@ def setup_cosmology_and_variance(
     print("Initializing VariablesGenerator...")
     variables = VariablesGenerator(
         cosmo=cosmo,
-        variance=variance,
+        variance=variance_,
         zs=zs_source,
         theta1=theta1_arcmin,
         nz_file=nz_file,

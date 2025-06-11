@@ -2,7 +2,7 @@ import jax
 import jax.numpy as jnp
 from jax.numpy.fft import rfft2
 from .utils import fourier_coordinate
-
+import numpy as np
 
 def calculate_Cls(map, angle, ell_min, ell_max, n_bins):
     """
