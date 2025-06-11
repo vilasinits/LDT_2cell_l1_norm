@@ -1,0 +1,209 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>waveletl1.variables &mdash; wavelet l1-norm prediction tool 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            wavelet l1-norm prediction tool
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../waveletl1.html">waveletl1 package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wavelet l1-norm prediction tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">waveletl1.variables</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for waveletl1.variables</h1><div class="highlight"><pre>
+<span></span><span class="c1"># from imports import *</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy</span><span class="w"> </span><span class="kn">import</span> <span class="n">units</span> <span class="k">as</span> <span class="n">u</span>
+
+<div class="viewcode-block" id="VariablesGenerator">
+<a class="viewcode-back" href="../../waveletl1.variables.html#waveletl1.variables.VariablesGenerator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">VariablesGenerator</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stores configuration and calculates the final map variance (sigmasq_map).</span>
+<span class="sd">    Relies on injected cosmology, variance, and pre-calculated plane information.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        cosmo (Cosmology_function): Injected cosmology object.</span>
+<span class="sd">        variance (Variance): Injected variance object.</span>
+<span class="sd">        zs (float): Source redshift.</span>
+<span class="sd">        theta1_radian (float): Angular scale in radians converted from arcminutes.</span>
+<span class="sd">        theta2_radian (float): Twice the angular scale of theta1 in radians.</span>
+<span class="sd">        nz_file (str): Path to redshift distribution file.</span>
+<span class="sd">        nplanes (int): Number of lensing planes.</span>
+<span class="sd">        chis (np.ndarray): Comoving distances to lensing planes.</span>
+<span class="sd">        dchis (np.ndarray): Differential comoving distances for integration.</span>
+<span class="sd">        z_array (np.ndarray): Redshifts corresponding to chis.</span>
+<span class="sd">        lensing_weight (np.ndarray): Lensing weights at each plane.</span>
+<span class="sd">        sigmasq_map (float): The calculated mass map variance.</span>
+<span class="sd">        recal_value (float): Recalibration value.</span>
+<span class="sd">    </span>
+<span class="sd">    Methods:</span>
+<span class="sd">        __init__(self, cosmo, variance, zs, volume, theta1, nz_file, nplanes, chis, dchis, z_array, lensing_weight):</span>
+<span class="sd">            Initializes the VariablesGenerator with injected objects and configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="VariablesGenerator.__init__">
+<a class="viewcode-back" href="../../waveletl1.variables.html#waveletl1.variables.VariablesGenerator.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">cosmo</span><span class="p">,</span>
+        <span class="n">variance</span><span class="p">,</span>
+        <span class="n">zs</span><span class="p">,</span>
+        <span class="n">theta1</span><span class="p">,</span>
+        <span class="n">nz_file</span><span class="p">,</span>
+        <span class="n">nplanes</span><span class="p">,</span>
+        <span class="n">chis</span><span class="p">,</span>
+        <span class="n">dchis</span><span class="p">,</span>
+        <span class="n">z_array</span><span class="p">,</span>
+        <span class="n">lensing_weight</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the VariablesGenerator with injected objects and pre-calculated plane info.</span>
+<span class="sd">        Calculates sigmasq_map.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            cosmo (Cosmology_function): An initialized cosmology object.</span>
+<span class="sd">            variance (Variance): An initialized variance object.</span>
+<span class="sd">            zs (float): Source redshift.</span>
+<span class="sd">            volume (float): Simulation volume.</span>
+<span class="sd">            theta1 (float): Angular scale in arcminutes.</span>
+<span class="sd">            nz_file (str): Path to n(z) file.</span>
+<span class="sd">            nplanes (int): Number of planes.</span>
+<span class="sd">            chis (np.ndarray): Comoving distances to planes.</span>
+<span class="sd">            dchis (np.ndarray): Differential comoving distances.</span>
+<span class="sd">            z_array (np.ndarray): Redshifts of planes.</span>
+<span class="sd">            lensing_weight (np.ndarray): Lensing weights at planes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cosmo</span> <span class="o">=</span> <span class="n">cosmo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variance</span> <span class="o">=</span> <span class="n">variance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zs</span> <span class="o">=</span> <span class="n">zs</span>
+        <span class="c1"># self.volume = volume</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta1_radian</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="n">theta1</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">arcmin</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">radian</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+        <span class="p">)</span>  <span class="c1"># Convert theta1 from arcmin to radians</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta2_radian</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mf">2.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta1_radian</span>
+        <span class="p">)</span>  <span class="c1"># Double the angular scale for theta2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nz_file</span> <span class="o">=</span> <span class="n">nz_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nplanes</span> <span class="o">=</span> <span class="n">nplanes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chi_source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cosmo</span><span class="o">.</span><span class="n">get_chi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chis</span> <span class="o">=</span> <span class="n">chis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dchis</span> <span class="o">=</span> <span class="n">dchis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_array</span> <span class="o">=</span> <span class="n">z_array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lensing_weight</span> <span class="o">=</span> <span class="n">lensing_weight</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lambdas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+        <span class="c1"># Calculate sigmasq_map directly here</span>
+        <span class="n">lensing_weight_squared</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lensing_weight</span> <span class="o">**</span> <span class="mf">2.0</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Calculating sigmasq_map...&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;the shapes are: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dchis</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">lensing_weight_squared</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigmasq_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dchis</span>
+            <span class="o">*</span> <span class="n">lensing_weight_squared</span>
+            <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">variance</span><span class="o">.</span><span class="n">get_sig_slice</span><span class="p">(</span>
+                        <span class="n">z</span><span class="p">,</span> <span class="n">chi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta1_radian</span><span class="p">,</span> <span class="n">chi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta2_radian</span>
+                    <span class="p">)</span>
+                    <span class="k">for</span> <span class="n">z</span><span class="p">,</span> <span class="n">chi</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">z_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">chis</span><span class="p">)</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recal_value</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crit_point_z</span> <span class="o">=</span> <span class="n">variance</span><span class="o">.</span><span class="n">crit_point_z</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;VariablesGenerator Initialized:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Source Redshift (zs): </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">zs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Angular Scale (theta1): </span><span class="si">{</span><span class="n">theta1</span><span class="si">}</span><span class="s2"> arcmin&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Number of Planes: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nplanes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Using n(z) file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nz_file</span><span class="w"> </span><span class="ow">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="kc">None</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Calculated Map Variance (sigmasq_map): </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sigmasq_map</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Vilasini Tinnaneri Sreekanth.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

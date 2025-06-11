@@ -1,0 +1,185 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>waveletl1.utils &mdash; wavelet l1-norm prediction tool 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            wavelet l1-norm prediction tool
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../waveletl1.html">waveletl1 package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wavelet l1-norm prediction tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">waveletl1.utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for waveletl1.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+
+<div class="viewcode-block" id="apply_pixel_window">
+<a class="viewcode-back" href="../../waveletl1.utils.html#waveletl1.utils.apply_pixel_window">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_pixel_window</span><span class="p">(</span><span class="n">ells</span><span class="p">,</span> <span class="n">theta_deg</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">npix</span><span class="o">=</span><span class="mi">1200</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply pixel window function to theoretical Cls.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    - cls: array of C_ell values (same length as ells)</span>
+<span class="sd">    - ells: array of multipoles (ell values)</span>
+<span class="sd">    - theta_deg: total angular size of the map (in degrees)</span>
+<span class="sd">    - npix: number of pixels on one side of the square map</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    - cls_smoothed: Cls multiplied by the pixel window function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Convert pixel size to radians</span>
+    <span class="n">theta_pix_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">theta_deg</span> <span class="o">/</span> <span class="n">npix</span><span class="p">)</span>
+
+    <span class="c1"># Pixel window function W(ell) = sinc(ell * theta_pix / 2)^2</span>
+    <span class="c1"># np.sinc(x) = sin(pi*x)/(pi*x), so we must divide by pi</span>
+    <span class="n">arg</span> <span class="o">=</span> <span class="n">ells</span> <span class="o">*</span> <span class="n">theta_pix_rad</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">W_ell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sinc</span><span class="p">(</span><span class="n">arg</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+    <span class="k">return</span> <span class="n">W_ell</span></div>
+
+
+
+<div class="viewcode-block" id="fourier_coordinate">
+<a class="viewcode-back" href="../../waveletl1.utils.html#waveletl1.utils.fourier_coordinate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fourier_coordinate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">map_size</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(((</span><span class="n">map_size</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">y</span></div>
+
+
+
+<div class="viewcode-block" id="get_moments">
+<a class="viewcode-back" href="../../waveletl1.utils.html#waveletl1.utils.get_moments">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_moments</span><span class="p">(</span><span class="n">kappa_values</span><span class="p">,</span> <span class="n">pdf_values</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the moments (mean, variance, skewness, kurtosis) of a probability distribution function.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        kappa_values (numpy.ndarray): A 1D array of kappa values.</span>
+<span class="sd">        pdf_values (numpy.ndarray): A 1D array of PDF values corresponding to `kappa_values`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: Contains mean, variance, skewness, kurtosis, and normalization of the PDF.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">pdf_values</span><span class="p">,</span> <span class="n">kappa_values</span><span class="p">)</span>
+    <span class="n">normalized_pdf_values</span> <span class="o">=</span> <span class="n">pdf_values</span> <span class="o">/</span> <span class="n">norm</span>
+    <span class="n">mean_kappa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">kappa_values</span> <span class="o">*</span> <span class="n">normalized_pdf_values</span><span class="p">,</span> <span class="n">kappa_values</span><span class="p">)</span>
+    <span class="n">variance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">kappa_values</span> <span class="o">-</span> <span class="n">mean_kappa</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">normalized_pdf_values</span><span class="p">,</span> <span class="n">kappa_values</span>
+    <span class="p">)</span>
+    <span class="n">third_moment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">kappa_values</span> <span class="o">-</span> <span class="n">mean_kappa</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">normalized_pdf_values</span><span class="p">,</span> <span class="n">kappa_values</span>
+    <span class="p">)</span>
+    <span class="n">fourth_moment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">kappa_values</span> <span class="o">-</span> <span class="n">mean_kappa</span><span class="p">)</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">normalized_pdf_values</span><span class="p">,</span> <span class="n">kappa_values</span>
+    <span class="p">)</span>
+    <span class="n">S_3</span> <span class="o">=</span> <span class="n">third_moment</span> <span class="o">/</span> <span class="n">variance</span><span class="o">**</span><span class="mf">2.0</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">fourth_moment</span> <span class="o">/</span> <span class="n">variance</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">3</span>
+    <span class="k">return</span> <span class="n">mean_kappa</span><span class="p">,</span> <span class="n">variance</span><span class="p">,</span> <span class="n">S_3</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">norm</span></div>
+
+
+
+<div class="viewcode-block" id="get_l1_from_pdf">
+<a class="viewcode-back" href="../../waveletl1.utils.html#waveletl1.utils.get_l1_from_pdf">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_l1_from_pdf</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">bins</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the L1 norm from a probability distribution function represented as a histogram.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        counts (numpy.ndarray): The counts or heights of the histogram bins.</span>
+<span class="sd">        bins (numpy.ndarray): The values of the bins.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        numpy.ndarray: L1 norm of the PDF represented by the histogram.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">counts</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Vilasini Tinnaneri Sreekanth.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

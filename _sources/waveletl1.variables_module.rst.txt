@@ -1,0 +1,7 @@
+waveletl1.variables\_module module
+==================================
+
+.. automodule:: waveletl1.variables_module
+   :members:
+   :show-inheritance:
+   :undoc-members:
